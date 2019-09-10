@@ -1,0 +1,30 @@
+﻿
+
+
+What is this Game?
+	3D person space ship dog fighting game
+
+features:
+	- fly around in space ship
+	- destroy atreoids
+	- dog fight other ships
+
+
+TODOs:
+	- object hirarchy
+		camera
+
+	- basic object shader
+
+	- player controller of basic mesh
+
+	- replace basic mesh with model 
+		load model data from blender
+
+	- skybox
+		shader? procedural?
+
+	- upgrade object shader with lights
+
+	- particle System
+		space dust particles when flying to get a sense of movement
