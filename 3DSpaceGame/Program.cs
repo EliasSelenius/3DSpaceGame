@@ -30,7 +30,8 @@ namespace _3DSpaceGame {
 
             Window.WindowState = WindowState.Fullscreen;
 
-            var o = OBJLoader.Load(new[] {
+
+            var o = OBJ.Load(new[] {
                 "v -0.5 -0.5 0",
                 "v -0.5 0.5 0",
                 "v 0.5 -0.5 0",
@@ -39,8 +40,8 @@ namespace _3DSpaceGame {
                 "vt 0 1",
                 "vt 1 0",
                 "vt 1 1",
-                "f 0/2 1/0 2/3",
-                "f 3/1 2/3 1/0"
+                "f 1/3 2/1 3/4",
+                "f 4/2 3/4 2/1"
             });
 
             /*
