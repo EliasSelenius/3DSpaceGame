@@ -52,6 +52,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="CamFlyController.cs" />
     <Compile Include="Input.cs" />
+    <Compile Include="Mesh.cs" />
     <Compile Include="OBJ.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +62,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="data\frag.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\test.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\test.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="data\vert.glsl">

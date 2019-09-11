@@ -33,6 +33,31 @@ namespace _3DSpaceGame {
             }
         }
 
+        public Mesh GenMesh() {
+            var m = new Mesh();
+
+            
+
+            foreach (var face in Faces) {
+                foreach (var vert in face.vertices) {
+                    var posi = vert.PositionIndex - 1;
+                    var uvi = vert.UVIndex - 1;
+                    var normi = vert.NormalIndex - 1;
+
+                    m.AddVertex(
+                        Vertices[posi],
+                        uvi < 0 ? Vector2.Zero : UVs[uvi],
+                        normi < 0 ? Vector3.Zero : Normals[normi]);
+                }
+            }
+
+            foreach (var face in Faces) {
+                m.AddTriangle((uint)face.vertices[0].PositionIndex, (uint)face.vertices[1].PositionIndex, (uint)face.vertices[2].PositionIndex);
+            }
+
+            return m;
+        }
+
         #region parsing
 
         public static OBJ LoadFile(string filepath) => Load(System.IO.File.ReadAllLines(filepath));
@@ -42,6 +67,11 @@ namespace _3DSpaceGame {
 
             for (int i = 0; i < source.Length; i++) {
                 var line = source[i];
+
+                // suppress if line is a comment
+                if (line.StartsWith("#")) {
+                    continue;
+                }
 
                 string p;
                 if (LineMatch(line, "v", out p)) {
@@ -83,6 +113,14 @@ namespace _3DSpaceGame {
                         Log("problem parsing face", i + 1);
                     }
 
+                } else if (LineMatch(line, "o", out p)) {
+                    Log("o is not supported", i + 1);
+                } else if (LineMatch(line, "mtllib", out p)) {
+                    Log("mtllib is not supported", i + 1);
+                } else if (LineMatch(line, "usemtl", out p)) {
+                    Log("usemtl is not supported", i + 1);
+                } else if (LineMatch(line, "s", out p)) {
+                    Log("s is not supported", i + 1);
                 } else {
                     // unrecognized
                     //Console.WriteLine("(OBJ parser) did not recognize: " + line + " at line " + (i + 1));
@@ -96,6 +134,7 @@ namespace _3DSpaceGame {
             return res;
         }
 
+        
 
         private static void Log(string msg, int line) {
             Console.WriteLine($"(OBJ Parser at line {line}) {msg}");
@@ -115,7 +154,7 @@ namespace _3DSpaceGame {
 
         private static bool ParseObjVertex(string str, out OBJ.Vertex objvertex) {
             try {
-                var nums = str.Split('/').Select(x => int.Parse(x));
+                var nums = str.Split('/').Select(x => x == string.Empty ? 0 : int.Parse(x));
 
                 var pos = nums.ElementAt(0);
                 var uv = nums.ElementAt(1);

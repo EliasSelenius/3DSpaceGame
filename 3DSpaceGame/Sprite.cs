@@ -39,7 +39,9 @@ namespace _3DSpaceGame {
         public readonly Texture2D texture;
 
         public override void Render() {
-            vao.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 6, OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt);
+            //vao.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 6, OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt);
+            Program.testVAO.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 132, OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt);
+
         }
 
         public override void Start() {
