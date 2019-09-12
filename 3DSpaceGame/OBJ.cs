@@ -36,23 +36,25 @@ namespace _3DSpaceGame {
         public Mesh GenMesh() {
             var m = new Mesh();
 
-            
-
-            foreach (var face in Faces) {
-                foreach (var vert in face.vertices) {
-                    var posi = vert.PositionIndex - 1;
-                    var uvi = vert.UVIndex - 1;
-                    var normi = vert.NormalIndex - 1;
-
-                    m.AddVertex(
-                        Vertices[posi],
-                        uvi < 0 ? Vector2.Zero : UVs[uvi],
-                        normi < 0 ? Vector3.Zero : Normals[normi]);
-                }
+            foreach (var v in Vertices) {
+                m.AddVertex(v, Vector2.Zero, Vector3.Zero);
             }
 
+            //foreach (var face in Faces) {
+            //    foreach (var vert in face.vertices) {
+            //        var posi = vert.PositionIndex - 1;
+            //        var uvi = vert.UVIndex - 1;
+            //        var normi = vert.NormalIndex - 1;
+
+            //        m.AddVertex(
+            //            Vertices[posi],
+            //            uvi < 0 ? Vector2.Zero : UVs[uvi],
+            //            normi < 0 ? Vector3.Zero : Normals[normi]);
+            //    }
+            //}
+
             foreach (var face in Faces) {
-                m.AddTriangle((uint)face.vertices[0].PositionIndex, (uint)face.vertices[1].PositionIndex, (uint)face.vertices[2].PositionIndex);
+                m.AddTriangle((uint)face.vertices[0].PositionIndex - 1, (uint)face.vertices[1].PositionIndex - 1, (uint)face.vertices[2].PositionIndex - 1);
             }
 
             return m;

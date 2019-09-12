@@ -58,8 +58,8 @@ namespace _3DSpaceGame {
         private static void Window_Load(object sender, EventArgs e) {
             GL.ClearColor(0, 0, 0, 1);
 
-            var f = new Shader(ShaderType.FragmentShader, System.IO.File.ReadAllText("data/frag.glsl"));
-            var v = new Shader(ShaderType.VertexShader, System.IO.File.ReadAllText("data/vert.glsl"));
+            var f = new Shader(ShaderType.FragmentShader, System.IO.File.ReadAllText("data/shaders/frag.glsl"));
+            var v = new Shader(ShaderType.VertexShader, System.IO.File.ReadAllText("data/shaders/vert.glsl"));
             ActiveShader = new ShaderProgram(f, v);
             f.Dispose();
             v.Dispose();
@@ -68,9 +68,10 @@ namespace _3DSpaceGame {
 
             var cam = scene.InitObject(new Camera(), new CamFlyController());
             cam.Position.Z += 3;
-            scene.InitObject(new Sprite());
+            var g = scene.InitObject(new Sprite());
+            g.Scale *= 3;
 
-            var testOBJ = OBJ.LoadFile("data/test.obj");
+            var testOBJ = OBJ.LoadFile("data/models/StarterShip.obj");
             var m = testOBJ.GenMesh();
             testVAO = m.ToVAO();
 

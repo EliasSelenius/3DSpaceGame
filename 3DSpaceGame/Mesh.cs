@@ -47,6 +47,8 @@ namespace _3DSpaceGame {
 
             vao.AttribPointer(Program.ActiveShader.GetAttribLocation("v_pos"), 3, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 8, 0);
             vao.AttribPointer(Program.ActiveShader.GetAttribLocation("v_uv"), 2, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 8, sizeof(float) * 3);
+            vao.AttribPointer(Program.ActiveShader.GetAttribLocation("v_normal"), 3, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 8, sizeof(float) * 5);
+
 
             return vao;
         }
