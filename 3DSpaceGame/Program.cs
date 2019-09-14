@@ -57,6 +57,7 @@ namespace _3DSpaceGame {
 
         private static void Window_Load(object sender, EventArgs e) {
             GL.ClearColor(0, 0, 0, 1);
+            GL.Enable(EnableCap.DepthTest);
 
             var f = new Shader(ShaderType.FragmentShader, System.IO.File.ReadAllText("data/shaders/frag.glsl"));
             var v = new Shader(ShaderType.VertexShader, System.IO.File.ReadAllText("data/shaders/vert.glsl"));
@@ -68,20 +69,26 @@ namespace _3DSpaceGame {
 
             var cam = scene.InitObject(new Camera(), new CamFlyController());
             cam.Position.Z += 3;
-            var g = scene.InitObject(new Sprite());
-            g.Scale *= 3;
+            lightObj = scene.InitObject(new Sprite());
 
-            var testOBJ = OBJ.LoadFile("data/models/StarterShip.obj");
-            var m = testOBJ.GenMesh();
-            testVAO = m.ToVAO();
+            scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/StarterShip.obj").GenMesh()));
+
+            ActiveShader.SetVec3("plight.color", 1, 1, 1);
 
         }
 
-        public static VertexArray testVAO;
-
+        private static GameObject lightObj;
+        private static float time = 0;
         private static void Window_UpdateFrame(object sender, FrameEventArgs e) {
             scene.Update();
             Input.Update();
+
+            // test point light:
+            time += (float)e.Time;
+            lightObj.Position.X = (float)Math.Cos(time) * 10;
+            lightObj.Position.Z = (float)Math.Sin(time) * 10;
+            ActiveShader.SetVec3("plight.pos", lightObj.Position.X, 0, lightObj.Position.Z);
+
         }
 
         private static void Window_RenderFrame(object sender, FrameEventArgs e) {

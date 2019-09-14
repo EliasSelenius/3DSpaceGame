@@ -53,6 +53,7 @@
     <Compile Include="CamFlyController.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Mesh.cs" />
+    <Compile Include="MeshRenderer.cs" />
     <Compile Include="OBJ.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,10 +64,10 @@
     <None Include="App.config" />
     <None Include="data\models\blendersource\StarterShip.blend" />
     <None Include="data\models\StarterShip.mtl">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="data\models\StarterShip.obj">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="data\shaders\frag.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

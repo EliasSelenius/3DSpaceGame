@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 namespace _3DSpaceGame {
 
     [StructLayout(LayoutKind.Sequential)]
-    struct Vertex {
+    public struct Vertex {
         public Vector3 pos;
         public Vector2 uv;
         public Vector3 normal;
@@ -21,25 +21,33 @@ namespace _3DSpaceGame {
         }
     }
 
-    class Mesh {
-        public readonly List<Vertex> vertices = new List<Vertex>();
-        public readonly List<uint> indices = new List<uint>();
+    public class Mesh {
 
-        public void AddVertex(Vector3 p, Vector2 u, Vector3 n) => vertices.Add(new Vertex(p, u, n));
+        private VertexArray vao;
+        private Buffer<Vertex> vbo;
+        private Buffer<uint> ebo;
 
-        public void AddTriangle(uint a, uint b, uint c) {
-            indices.Add(a);
-            indices.Add(b);
-            indices.Add(c);
+        public readonly List<Vertex> vertices;
+        public readonly List<uint> indices;
+
+        public Mesh() {
+            vertices = new List<Vertex>();
+            indices = new List<uint>();
         }
 
-        public VertexArray ToVAO() {
-            var vao = new VertexArray();
+        public Mesh(IEnumerable<Vertex> verts, IEnumerable<uint> indc) {
+            vertices = verts.ToList();
+            indices = indc.ToList();
+        }
+        
 
-            var vbo = new Buffer<Vertex>();
+        public void Init() {
+            vao = new VertexArray();
+
+            vbo = new Buffer<Vertex>();
             vbo.Initialize(vertices.ToArray(), OpenTK.Graphics.OpenGL4.BufferUsageHint.StaticDraw);
 
-            var ebo = new Buffer<uint>();
+            ebo = new Buffer<uint>();
             ebo.Initialize(indices.ToArray(), OpenTK.Graphics.OpenGL4.BufferUsageHint.StaticDraw);
 
             vao.SetBuffer(OpenTK.Graphics.OpenGL4.BufferTarget.ArrayBuffer, vbo);
@@ -49,9 +57,23 @@ namespace _3DSpaceGame {
             vao.AttribPointer(Program.ActiveShader.GetAttribLocation("v_uv"), 2, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 8, sizeof(float) * 3);
             vao.AttribPointer(Program.ActiveShader.GetAttribLocation("v_normal"), 3, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 8, sizeof(float) * 5);
 
+        }
 
-            return vao;
+
+        public void Render() {
+            vao.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, indices.Count, OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt);
+        }
+
+        public void AddVertex(Vector3 p, Vector2 u, Vector3 n) => vertices.Add(new Vertex(p, u, n));
+
+        public void AddTriangle(uint a, uint b, uint c) {
+            indices.Add(a);
+            indices.Add(b);
+            indices.Add(c);
         }
 
     }
+
+
+    
 }

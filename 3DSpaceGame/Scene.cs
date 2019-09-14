@@ -8,7 +8,7 @@ using OpenTK;
 
 namespace _3DSpaceGame {
 
-    class Scene {
+    public class Scene {
         private readonly List<GameObject> gameObjects = new List<GameObject>();
 
         public void RemoveObject(GameObject o) {
@@ -40,7 +40,7 @@ namespace _3DSpaceGame {
 
     }
 
-    class GameObject {
+    public class GameObject {
 
         public Scene scene { get; private set; }
 
@@ -128,7 +128,7 @@ namespace _3DSpaceGame {
 
     }
 
-    abstract class Component {
+    public abstract class Component {
         public GameObject gameObject { get; private set; }
 
         public void Init(GameObject g) {

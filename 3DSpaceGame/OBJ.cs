@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 using OpenTK;
 
 namespace _3DSpaceGame {
-    class OBJ {
+    public class OBJ {
         public readonly List<Vector3> Vertices = new List<Vector3>();
         public readonly List<Vector3> Normals = new List<Vector3>();
         public readonly List<Vector2> UVs = new List<Vector2>();
 
         public readonly List<Face> Faces = new List<Face>();
 
-        public class Vertex {
+        public class VertexIndices {
             public readonly int PositionIndex;
             public readonly int UVIndex;
             public readonly int NormalIndex;
 
-            public Vertex(int pos, int uv, int normal) {
+            public VertexIndices(int pos, int uv, int normal) {
                 PositionIndex = pos;
                 UVIndex = uv;
                 NormalIndex = normal;
@@ -27,37 +27,49 @@ namespace _3DSpaceGame {
         }
 
         public class Face {
-            public readonly Vertex[] vertices;
-            public Face(IEnumerable<Vertex> verts) {
+            public readonly VertexIndices[] vertices;
+            public Face(IEnumerable<VertexIndices> verts) {
                 vertices = verts.ToArray();
             }
         }
 
+        private Vector2 GetUv(int i) {
+            if (i == 0) {
+                return Vector2.Zero;
+            }
+            return UVs[i - 1];
+        }
+
+        private Vector3 GetPos(int i) {
+            if (i == 0) {
+                return Vector3.Zero;
+            }
+            return Vertices[i - 1];
+        }
+
+        private Vector3 GetNormal(int i) {
+            if (i == 0) {
+                return Vector3.Zero;
+            }
+            return Normals[i - 1];
+        }
+
         public Mesh GenMesh() {
-            var m = new Mesh();
+            var meshVerts = new List<Vertex>();
+            var meshindc = new List<uint>();
 
-            foreach (var v in Vertices) {
-                m.AddVertex(v, Vector2.Zero, Vector3.Zero);
+            uint tr = 0;
+            for (int f = 0; f < Faces.Count; f++) {
+                var face = Faces[f];
+                for (uint v = 0; v < face.vertices.Length; v++) {
+                    var vert = face.vertices[v];
+                    meshVerts.Add(new Vertex(GetPos(vert.PositionIndex), GetUv(vert.UVIndex), GetNormal(vert.NormalIndex)));
+                    meshindc.Add(tr + v);
+                }
+                tr += 3;
             }
 
-            //foreach (var face in Faces) {
-            //    foreach (var vert in face.vertices) {
-            //        var posi = vert.PositionIndex - 1;
-            //        var uvi = vert.UVIndex - 1;
-            //        var normi = vert.NormalIndex - 1;
-
-            //        m.AddVertex(
-            //            Vertices[posi],
-            //            uvi < 0 ? Vector2.Zero : UVs[uvi],
-            //            normi < 0 ? Vector3.Zero : Normals[normi]);
-            //    }
-            //}
-
-            foreach (var face in Faces) {
-                m.AddTriangle((uint)face.vertices[0].PositionIndex - 1, (uint)face.vertices[1].PositionIndex - 1, (uint)face.vertices[2].PositionIndex - 1);
-            }
-
-            return m;
+            return new Mesh(meshVerts, meshindc);
         }
 
         #region parsing
@@ -144,17 +156,17 @@ namespace _3DSpaceGame {
 
         private static bool ParseFace(string str, out OBJ.Face face) {
             var list = str.Split(' ');
-            var verts = new List<OBJ.Vertex>();
+            var verts = new List<OBJ.VertexIndices>();
             var notfail = true;
             for (int i = 0; i < list.Length && notfail; i++) {
-                notfail = ParseObjVertex(list[i], out OBJ.Vertex v);
+                notfail = ParseObjVertex(list[i], out OBJ.VertexIndices v);
                 verts.Add(v);
             }
             face = new OBJ.Face(verts);
             return notfail;
         }
 
-        private static bool ParseObjVertex(string str, out OBJ.Vertex objvertex) {
+        private static bool ParseObjVertex(string str, out OBJ.VertexIndices objvertex) {
             try {
                 var nums = str.Split('/').Select(x => x == string.Empty ? 0 : int.Parse(x));
 
@@ -165,7 +177,7 @@ namespace _3DSpaceGame {
                     normal = nums.ElementAt(2);
                 }
 
-                objvertex = new OBJ.Vertex(pos, uv, normal);
+                objvertex = new OBJ.VertexIndices(pos, uv, normal);
                 return true;
 
             } catch (Exception) {

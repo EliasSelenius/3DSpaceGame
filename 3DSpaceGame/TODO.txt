@@ -11,15 +11,15 @@ features:
 
 
 TODOs:
-	- object hirarchy
-		camera
+	- <Done>object hirarchy
+		<Done>camera
 
-	- basic object shader
+	- <Done>basic object shader
 
 	- player controller of basic mesh
 
 	- replace basic mesh with model 
-		load model data from blender
+		<WIP>load model data from blender
 
 	- skybox
 		shader? procedural?
