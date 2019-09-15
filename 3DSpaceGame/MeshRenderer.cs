@@ -9,12 +9,15 @@ namespace _3DSpaceGame {
     public class MeshRenderer : Component {
 
         public readonly Mesh mesh;
+        public Material material;
 
-        public MeshRenderer(Mesh m) {
+        public MeshRenderer(Mesh m, Material mat) {
             mesh = m;
+            material = mat;
         }
 
         public override void Render() {
+            material.Apply();
             mesh.Render();
         }
 

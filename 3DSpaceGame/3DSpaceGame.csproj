@@ -52,9 +52,11 @@
     <Compile Include="Camera.cs" />
     <Compile Include="CamFlyController.cs" />
     <Compile Include="Input.cs" />
+    <Compile Include="Material.cs" />
     <Compile Include="Mesh.cs" />
     <Compile Include="MeshRenderer.cs" />
     <Compile Include="OBJ.cs" />
+    <Compile Include="PhysicsBody.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scene.cs" />
@@ -62,11 +64,26 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="data\models\blendersource\ClockWork.blend" />
     <None Include="data\models\blendersource\StarterShip.blend" />
+    <None Include="data\models\blendersource\StarterShip.blend1" />
+    <None Include="data\models\blendersource\TheFrog.blend" />
+    <None Include="data\models\ClockWork.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\models\ClockWork.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="data\models\StarterShip.mtl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="data\models\StarterShip.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\models\TheFrog.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\models\TheFrog.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="data\shaders\frag.glsl">

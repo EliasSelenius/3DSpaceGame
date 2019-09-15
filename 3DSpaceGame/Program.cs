@@ -15,7 +15,9 @@ namespace _3DSpaceGame {
 
         public static Scene scene;
         public static ShaderProgram ActiveShader;
-        
+
+        public static float DeltaTime;
+
         static void Main(string[] args) {
 
             Window = new GameWindow(1600, 900);
@@ -69,26 +71,31 @@ namespace _3DSpaceGame {
 
             var cam = scene.InitObject(new Camera(), new CamFlyController());
             cam.Position.Z += 3;
-            lightObj = scene.InitObject(new Sprite());
 
-            scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/StarterShip.obj").GenMesh()));
+            var ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/StarterShip.obj").GenMesh(), Material.Brass),
+                             new PhysicsBody());
+            ship.GetComp<PhysicsBody>().AddForce(0, 0, 1);
 
-            ActiveShader.SetVec3("plight.color", 1, 1, 1);
+            ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/TheFrog.obj").GenMesh(), Material.Bronze));
+            ship.Position.Y = 4;
 
+            var station = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/ClockWork.obj").GenMesh(), Material.Gold));
+            station.Position.Z = -150;
+            station.Scale *= 15;
+
+            // test dir light
+            ActiveShader.SetVec3("dirLight.color", 1, 1, 1);
+            ActiveShader.SetVec3("dirLight.dir", -Vector3.One);
+
+            // test point light
+            //ActiveShader.SetVec3("pointLight.pos", Vector3.UnitX);
+            //ActiveShader.SetVec3("pointLight.color", 1, 1, 1);
         }
 
-        private static GameObject lightObj;
-        private static float time = 0;
         private static void Window_UpdateFrame(object sender, FrameEventArgs e) {
+            DeltaTime = (float)e.Time;
             scene.Update();
             Input.Update();
-
-            // test point light:
-            time += (float)e.Time;
-            lightObj.Position.X = (float)Math.Cos(time) * 10;
-            lightObj.Position.Z = (float)Math.Sin(time) * 10;
-            ActiveShader.SetVec3("plight.pos", lightObj.Position.X, 0, lightObj.Position.Z);
-
         }
 
         private static void Window_RenderFrame(object sender, FrameEventArgs e) {

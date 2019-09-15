@@ -46,6 +46,8 @@ namespace _3DSpaceGame {
 
         public GameObject parent;
 
+        #region Transform
+
         public Matrix4 TransformMatrix {
             get {
                 var m = LocalMatrix;
@@ -65,8 +67,6 @@ namespace _3DSpaceGame {
         public Vector3 Position = Vector3.Zero;
         public Vector3 Scale = Vector3.One;
         public Quaternion Rotation = Quaternion.Identity;
-
-        private readonly List<Component> components = new List<Component>();
 
         #region transformation helper funcs
 
@@ -88,6 +88,30 @@ namespace _3DSpaceGame {
 
         #endregion
 
+        #endregion
+
+        #region Components
+
+        private readonly List<Component> components = new List<Component>();
+
+        public void AddComp(Component c) {
+            components.Add(c);
+            c.Init(this);
+        }
+
+        public void AddComps(params Component[] comps) {
+            foreach (var item in comps) {
+                AddComp(item);
+            }
+        }
+
+        public T GetComp<T>() where T : Component =>
+            (from o in components
+             where o is T
+             select o as T).FirstOrDefault();
+
+        #endregion
+
         public void MoveInToScene(Scene s) {
             if (scene != null) {
                 scene.RemoveObject(this);
@@ -100,17 +124,6 @@ namespace _3DSpaceGame {
             MoveInToScene(s);
             Position = pos;
             Rotation = rot;
-        }
-
-        public void AddComp(Component c) {
-            components.Add(c);
-            c.Init(this);
-        }
-
-        public void AddComps(params Component[] comps) {
-            foreach (var item in comps) {
-                AddComp(item);
-            }
         }
 
         public void Update() {

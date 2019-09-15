@@ -18,13 +18,13 @@ TODOs:
 
 	- player controller of basic mesh
 
-	- replace basic mesh with model 
-		<WIP>load model data from blender
+	- <Done>replace basic mesh with model 
+		<Done>load model data from blender
 
 	- skybox
 		shader? procedural?
 
-	- upgrade object shader with lights
+	- <WIP>upgrade object shader with lights
 
 	- particle System
 		space dust particles when flying to get a sense of movement
