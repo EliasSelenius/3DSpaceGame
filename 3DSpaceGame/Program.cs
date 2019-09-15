@@ -72,14 +72,17 @@ namespace _3DSpaceGame {
             var cam = scene.InitObject(new Camera(), new CamFlyController());
             cam.Position.Z += 3;
 
-            var ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/StarterShip.obj").GenMesh(), Material.Brass),
+            var ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/StarterShip.obj").GenMesh(), Material.Obsidian),
                              new PhysicsBody());
             ship.GetComp<PhysicsBody>().AddForce(0, 0, 1);
+            ship.Rotate(new Vector3(3.14f / 4f, 3.14f / 4f, 3.14f / 4f));
 
-            ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/TheFrog.obj").GenMesh(), Material.Bronze));
-            ship.Position.Y = 4;
+            var frog = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/TheFrog.obj").GenMesh(), Material.Pearl),
+                                    new PlayerShipController());
+            frog.Position.Y = 4;
+            //cam.parent = ship;
 
-            var station = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/ClockWork.obj").GenMesh(), Material.Gold));
+            var station = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/ClockWork.obj").GenMesh(), Material.Chrome));
             station.Position.Z = -150;
             station.Scale *= 15;
 

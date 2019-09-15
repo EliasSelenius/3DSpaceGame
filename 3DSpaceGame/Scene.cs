@@ -52,7 +52,7 @@ namespace _3DSpaceGame {
             get {
                 var m = LocalMatrix;
                 if (parent != null) {
-                    return parent.TransformMatrix * m;
+                    return m * parent.TransformMatrix;
                 }
                 return m;
             }
