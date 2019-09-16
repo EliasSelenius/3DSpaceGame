@@ -11,6 +11,8 @@ namespace _3DSpaceGame {
 
         public float mass = 1;
         public Vector3 motion;
+        public Vector3 rotmotion;
+        public float drag = .95f;
 
         public PhysicsBody() {
 
@@ -22,6 +24,13 @@ namespace _3DSpaceGame {
 
         public override void Update() {
             gameObject.Position += motion * Program.DeltaTime;
+            gameObject.Rotate(rotmotion * Program.DeltaTime);
+            motion *= drag;
+            rotmotion *= drag;
+        }
+
+        public void AddTorque(Vector3 torque) {
+            rotmotion += torque / mass;
         }
 
         public void AddForce(Vector3 force) {

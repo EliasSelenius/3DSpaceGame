@@ -55,6 +55,7 @@
     <Compile Include="Material.cs" />
     <Compile Include="Mesh.cs" />
     <Compile Include="MeshRenderer.cs" />
+    <Compile Include="MyMath.cs" />
     <Compile Include="OBJ.cs" />
     <Compile Include="PhysicsBody.cs" />
     <Compile Include="PlayerShipController.cs" />
@@ -66,6 +67,8 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="data\models\blendersource\ClockWork.blend" />
+    <None Include="data\models\blendersource\spaceCraft.blend" />
+    <None Include="data\models\blendersource\SpaceShip.blend" />
     <None Include="data\models\blendersource\StarterShip.blend" />
     <None Include="data\models\blendersource\StarterShip.blend1" />
     <None Include="data\models\blendersource\TheFrog.blend" />
@@ -73,6 +76,18 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="data\models\ClockWork.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\models\spaceCraft.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\models\spaceCraft.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\models\SpaceShip.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\models\SpaceShip.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="data\models\StarterShip.mtl">

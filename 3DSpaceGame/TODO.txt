@@ -11,20 +11,46 @@ features:
 
 
 TODOs:
-	- <Done>object hirarchy
-		<Done>camera
+	<Done> - object hirarchy {
+		camera
+	
+	}
 
-	- <Done>basic object shader
+	<Done> - basic object shader
 
-	- player controller of basic mesh
+	<Done> - basic player controller of basic mesh
 
-	- <Done>replace basic mesh with model 
-		<Done>load model data from blender
+	<Done> - replace basic mesh with model {
+		load model data from blender
+	} 
 
-	- skybox
+	- skybox {
 		shader? procedural?
+		cubeMaps
+	}
 
-	- <WIP>upgrade object shader with lights
+	<WIP> - upgrade object shader with lights {
+		support multiple pointlights
+	}
 
-	- particle System
+	- particle System {
 		space dust particles when flying to get a sense of movement
+	}
+
+	- upgrade camera/ship controller {
+		
+	}
+
+	- Add ships {
+		- The Turtle.
+		- The other cool one
+	}
+
+	- ships classes system {
+		Tier system {
+			low tier ships and high tier ships
+		}
+		ship class {
+			Military, Mining, civilian, research
+		}
+	}

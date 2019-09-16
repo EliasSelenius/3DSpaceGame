@@ -23,6 +23,7 @@ namespace _3DSpaceGame {
             var g = new GameObject();
             g.MoveInToScene(this);
             g.AddComps(comps);
+            g.Start();
             return g;
         }
 
@@ -60,9 +61,12 @@ namespace _3DSpaceGame {
 
         public Matrix4 LocalMatrix => Matrix4.CreateScale(Scale) * Matrix4.CreateFromQuaternion(Rotation) * Matrix4.CreateTranslation(Position);
 
-        public Vector3 Forward => LocalMatrix.Column2.Xyz;
-        public Vector3 Right => LocalMatrix.Column0.Xyz;
-        public Vector3 Up => LocalMatrix.Column1.Xyz;
+        public Vector3 Forward => LocalMatrix.Row2.Xyz;
+        public Vector3 Back => -Forward;
+        public Vector3 Right => LocalMatrix.Row0.Xyz;
+        public Vector3 Left => -Right;
+        public Vector3 Up => LocalMatrix.Row1.Xyz;
+        public Vector3 Down => -Up;
 
         public Vector3 Position = Vector3.Zero;
         public Vector3 Scale = Vector3.One;
@@ -126,6 +130,14 @@ namespace _3DSpaceGame {
             Rotation = rot;
         }
 
+        public bool HasStarted { get; private set; } = false;
+        public void Start() {
+            for (int i = 0; i < components.Count; i++) {
+                components[i].Start();
+            }
+            HasStarted = true;
+        }
+
         public void Update() {
             for (int i = 0; i < components.Count; i++) {
                 components[i].Update();
@@ -146,7 +158,9 @@ namespace _3DSpaceGame {
 
         public void Init(GameObject g) {
             gameObject = g;
-            Start(); // TODO: do start somewhere else
+            if (gameObject.HasStarted) {
+                Start();
+            }
         }
 
         public virtual void Start() { }

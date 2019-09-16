@@ -69,25 +69,31 @@ namespace _3DSpaceGame {
 
             scene = new Scene();
 
-            var cam = scene.InitObject(new Camera(), new CamFlyController());
+            var cam = scene.InitObject(new Camera());
             cam.Position.Z += 3;
 
-            var ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/StarterShip.obj").GenMesh(), Material.Obsidian),
+            var ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/StarterShip.obj").GenMesh(), Material.Brass),
                              new PhysicsBody());
             ship.GetComp<PhysicsBody>().AddForce(0, 0, 1);
             ship.Rotate(new Vector3(3.14f / 4f, 3.14f / 4f, 3.14f / 4f));
 
-            var frog = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/TheFrog.obj").GenMesh(), Material.Pearl),
-                                    new PlayerShipController());
+            var frog = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/TheFrog.obj").GenMesh(), Material.Silver),
+                                    new PlayerShipController(),
+                                    new PhysicsBody());
             frog.Position.Y = 4;
             //cam.parent = ship;
 
-            var station = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/ClockWork.obj").GenMesh(), Material.Chrome));
+            var station = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/ClockWork.obj").GenMesh(), Material.Obsidian));
             station.Position.Z = -150;
             station.Scale *= 15;
 
+            ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/spaceCraft.obj").GenMesh(), Material.Bronze));
+            ship.Position = Vector3.One * 20;
+            ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/SpaceShip.obj").GenMesh(), Material.Chrome));
+            ship.Position = Vector3.UnitX * 10;
+
             // test dir light
-            ActiveShader.SetVec3("dirLight.color", 1, 1, 1);
+            ActiveShader.SetVec3("dirLight.color", 1f, 1f, 1f);
             ActiveShader.SetVec3("dirLight.dir", -Vector3.One);
 
             // test point light

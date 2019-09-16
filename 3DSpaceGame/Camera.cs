@@ -32,7 +32,7 @@ namespace _3DSpaceGame {
             Program.ActiveShader.SetMat4("cam_projection", p);
 
 
-            var lookat = Matrix4.LookAt(gameObject.Position, gameObject.Position - gameObject.Forward, gameObject.Up);
+            var lookat = Matrix4.LookAt(gameObject.Position, gameObject.Position + gameObject.Forward, gameObject.Up);
             Program.ActiveShader.SetMat4("cam_view", lookat);
 
             Program.ActiveShader.SetVec3("cam_pos", gameObject.Position.X, gameObject.Position.Y, gameObject.Position.Z);
