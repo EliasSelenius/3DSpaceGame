@@ -60,6 +60,7 @@ namespace _3DSpaceGame {
         private static void Window_Load(object sender, EventArgs e) {
             GL.ClearColor(0, 0, 0, 1);
             GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
 
             var f = new Shader(ShaderType.FragmentShader, System.IO.File.ReadAllText("data/shaders/frag.glsl"));
             var v = new Shader(ShaderType.VertexShader, System.IO.File.ReadAllText("data/shaders/vert.glsl"));
@@ -67,29 +68,31 @@ namespace _3DSpaceGame {
             f.Dispose();
             v.Dispose();
 
+            Assets.Load();
+
             scene = new Scene();
 
             var cam = scene.InitObject(new Camera());
             cam.Position.Z += 3;
 
-            var ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/StarterShip.obj").GenMesh(), Material.Brass),
+            var ship = scene.InitObject(new MeshRenderer(Assets.OBJs["StarterShip.obj"].GenMesh(), Material.Brass),
                              new PhysicsBody());
             ship.GetComp<PhysicsBody>().AddForce(0, 0, 1);
             ship.Rotate(new Vector3(3.14f / 4f, 3.14f / 4f, 3.14f / 4f));
 
-            var frog = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/TheFrog.obj").GenMesh(), Material.Silver),
+            var frog = scene.InitObject(new MeshRenderer(Assets.OBJs["TheFrog.obj"].GenMesh(), Material.Silver),
                                     new PlayerShipController(),
                                     new PhysicsBody());
             frog.Position.Y = 4;
             //cam.parent = ship;
 
-            var station = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/ClockWork.obj").GenMesh(), Material.Obsidian));
+            var station = scene.InitObject(new MeshRenderer(Assets.OBJs["ClockWork.obj"].GenMesh(), new Material { ambient = new Vector3(.5f,0,0), diffuse = new Vector3(0, 1, 0), specular = new Vector3(1,1,1), shininess = .5f}));
             station.Position.Z = -150;
             station.Scale *= 15;
 
-            ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/spaceCraft.obj").GenMesh(), Material.Bronze));
+            ship = scene.InitObject(new MeshRenderer(Assets.OBJs["spaceCraft.obj"].GenMesh(), Material.Bronze));
             ship.Position = Vector3.One * 20;
-            ship = scene.InitObject(new MeshRenderer(OBJ.LoadFile("data/models/SpaceShip.obj").GenMesh(), Material.Chrome));
+            ship = scene.InitObject(new MeshRenderer(Assets.OBJs["SpaceShip.obj"].GenMesh(), Material.Chrome));
             ship.Position = Vector3.UnitX * 10;
 
             // test dir light

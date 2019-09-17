@@ -10,7 +10,7 @@ features:
 	- dog fight other ships
 
 
-TODOs:
+TODO and PLANNING:
 	<Done> - object hirarchy {
 		camera
 	
@@ -24,16 +24,13 @@ TODOs:
 		load model data from blender
 	} 
 
-	- skybox {
+	skybox {
 		shader? procedural?
 		cubeMaps
 	}
 
-	<WIP> - upgrade object shader with lights {
-		support multiple pointlights
-	}
 
-	- particle System {
+	particle System {
 		space dust particles when flying to get a sense of movement
 	}
 
@@ -41,12 +38,32 @@ TODOs:
 		
 	}
 
-	- Add ships {
+	Shaders {
+		- upgrade object shader to use blinn-phong lightning model
+		- upgrade object shader to support multiple point lights
+
+		- system for image effect shaders
+		- image effect shaders {
+			- bloom
+			- gamma correction?
+			- shock waves
+			- sun rays?
+		}
+
+	}
+
+	Assets manager {
+		<Done> - auto loading of OBJs
+	}
+
+
+
+	ships {
 		- The Turtle.
 		- The other cool one
 	}
 
-	- ships classes system {
+	ships classes system {
 		Tier system {
 			low tier ships and high tier ships
 		}
@@ -54,3 +71,21 @@ TODOs:
 			Military, Mining, civilian, research
 		}
 	}
+
+	World {
+		galaxy
+		
+		solar system {
+			contains 'sectors' that are points of intrest that you can travel to
+				- space station
+					- civilian
+					- pirate
+					- military 
+				- planet orbital station?
+				- astreoid belt
+					- rich mining areas (may contain mining facilitys)
+					- cold areas where there is ice astreoids
+				- scrap yard 
+		}
+	}
+

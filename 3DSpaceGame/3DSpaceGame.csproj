@@ -51,6 +51,9 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="CamFlyController.cs" />
+    <Compile Include="Assets.cs" />
+    <Compile Include="Component.cs" />
+    <Compile Include="GameObject.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="Mesh.cs" />
@@ -118,6 +121,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\textures\Skyboxes\Skybox_back.png" />
+    <Content Include="data\textures\Skyboxes\Skybox_down.png" />
+    <Content Include="data\textures\Skyboxes\Skybox_front.png" />
+    <Content Include="data\textures\Skyboxes\Skybox_left.png" />
+    <Content Include="data\textures\Skyboxes\Skybox_right.png" />
+    <Content Include="data\textures\Skyboxes\Skybox_up.png" />
     <Content Include="TODO.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

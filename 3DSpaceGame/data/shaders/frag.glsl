@@ -57,7 +57,8 @@ vec3 CalcDirLight(DirLight l, vec3 n, vec3 viewDir) {
 	// diffuse
 	float diffscale = max(dot(n, lightDir), 0.);
 	// specular
-	float specscale = pow(max(dot(viewDir, reflect(-lightDir, n)), 0.), material.shininess * 128.);
+	vec3 halfwaydir = normalize(lightDir + viewDir);
+	float specscale = pow(max(dot(n, halfwaydir), 0.), material.shininess * 128. * 3.);
 
 	vec3 ambient = l.color * material.ambient;
 	vec3 diffuse = l.color * (material.diffuse * diffscale);
@@ -66,6 +67,7 @@ vec3 CalcDirLight(DirLight l, vec3 n, vec3 viewDir) {
 	return (ambient + diffuse + specular);
 }
 
+// note this only uses Phong and not blinn-phong
 vec3 CalcPointLight(PointLight l, vec3 n, vec3 fp, vec3 viewDir) {
 	vec3 lightDir = normalize(l.pos - fp);
 	// diffuse

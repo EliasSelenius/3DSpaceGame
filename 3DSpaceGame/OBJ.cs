@@ -151,7 +151,7 @@ namespace _3DSpaceGame {
         
 
         private static void Log(string msg, int line) {
-            Console.WriteLine($"(OBJ Parser at line {line}) {msg}");
+            Console.WriteLine($"[OBJ Parser at line {line}] {msg}");
         }
 
         private static bool ParseFace(string str, out OBJ.Face face) {
