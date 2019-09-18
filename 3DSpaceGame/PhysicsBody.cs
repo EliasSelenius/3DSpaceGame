@@ -24,8 +24,8 @@ namespace _3DSpaceGame {
         }
 
         public override void EarlyUpdate() {
-            gameObject.Position += motion * Program.DeltaTime;
-            gameObject.Rotate(rotmotion * Program.DeltaTime);
+            transform.position += motion * Program.DeltaTime;
+            transform.Rotate(rotmotion * Program.DeltaTime);
             motion *= 1 - drag;
             rotmotion *= 1 - rotdrag;
         }

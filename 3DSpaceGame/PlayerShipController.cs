@@ -17,19 +17,28 @@ namespace _3DSpaceGame {
             Input.FixedMouse(true);
         }
 
+        private Vector2 mouseOffset;
+
         public override void Update() { 
-            var mdelta = Input.MouseDelta / 100f;
-            //gameObject.Rotate(new Vector3(mdelta.Y, -mdelta.X, 0));
-            p.AddTorque(new Vector3(mdelta.Y, -mdelta.X, 0));
+            mouseOffset += Input.MouseDelta / 100f;
+            //p.AddTorque(new Vector3(mdelta.Y, -mdelta.X, 0));
+
+            var offset = -transform.forward;
+            offset *= MyMath.Cos(mouseOffset.X);
+            offset += transform.right * MyMath.Sin(mouseOffset.X);
+            var newcampos = offset * 5f + transform.up * 1.5f;
+
+            transform.LookAt(Camera.MainCamera.transform.position);
 
             //Camera.MainCamera.gameObject.Position = MyMath.Lerp(Camera.MainCamera.gameObject.Position, gameObject.Position - gameObject.Forward * 5f + gameObject.Up * 1.5f, .9f);
-            Camera.MainCamera.gameObject.Position = gameObject.Position - gameObject.Forward * 5f + gameObject.Up * 1.5f;
-            Camera.MainCamera.gameObject.Rotation = gameObject.Rotation;
+            //Camera.MainCamera.transform.position = transform.position + newcampos;
+            //Camera.MainCamera.transform.rotation = transform.rotation;
+            //Camera.MainCamera.transform.LookAt(transform.position);
 
             var i = Input.Wasd;
-            var f = gameObject.Forward * i.Y;
-            f += gameObject.Left * i.X;
-            p.AddForce(f);
+            var f = transform.forward * i.Y;
+            f += transform.left * i.X;
+            //p.AddForce(f);
 
         }
     }

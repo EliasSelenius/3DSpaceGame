@@ -9,56 +9,24 @@ using OpenTK;
 namespace _3DSpaceGame {
     public class GameObject {
 
+        // nameing rule violation
+#pragma warning disable IDE1006
         public Scene scene { get; private set; }
+#pragma warning restore IDE1006
 
         public GameObject parent;
+        public readonly Transform transform = new Transform();
 
-        #region Transform
-
-        public Matrix4 TransformMatrix {
+        public Matrix4 ModelMatrix {
             get {
-                var m = LocalMatrix;
+                var m = transform.matrix;
                 if (parent != null) {
-                    return m * parent.TransformMatrix;
+                    return m * parent.ModelMatrix;
                 }
                 return m;
             }
         }
 
-        public Matrix4 LocalMatrix => Matrix4.CreateScale(Scale) * Matrix4.CreateFromQuaternion(Rotation) * Matrix4.CreateTranslation(Position);
-
-        public Vector3 Forward => LocalMatrix.Row2.Xyz;
-        public Vector3 Back => -Forward;
-        public Vector3 Right => LocalMatrix.Row0.Xyz;
-        public Vector3 Left => -Right;
-        public Vector3 Up => LocalMatrix.Row1.Xyz;
-        public Vector3 Down => -Up;
-
-        public Vector3 Position = Vector3.Zero;
-        public Vector3 Scale = Vector3.One;
-        public Quaternion Rotation = Quaternion.Identity;
-
-        #region transformation helper funcs
-
-        public void Translate(Vector3 v) {
-            Position += v;
-        }
-
-        public void Rotate(Quaternion q) {
-            Rotation *= q;
-        }
-
-        public void Rotate(Vector3 axis, float angle) {
-            Rotation *= Quaternion.FromAxisAngle(axis, angle);
-        }
-
-        public void Rotate(Vector3 euler) {
-            Rotation *= Quaternion.FromEulerAngles(euler);
-        }
-
-        #endregion
-
-        #endregion
 
         #region Components
 
@@ -124,7 +92,7 @@ namespace _3DSpaceGame {
         }
 
         public void Render() {
-            Program.ActiveShader.SetMat4("obj_transform", TransformMatrix);
+            Program.ActiveShader.SetMat4("obj_transform", ModelMatrix);
             foreach (var item in components) {
                 item.Render();
             }

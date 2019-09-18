@@ -22,14 +22,16 @@ namespace _3DSpaceGame {
 
             var translation = new Vector3();
             var wasd = Input.Wasd;
-            translation -= gameObject.Forward * wasd.Y;
-            translation += gameObject.Right * wasd.X;
+            translation += transform.forward * wasd.Y;
+            translation += transform.left * wasd.X;
             //translation += gameObject.Up * Input.KeyAxis(OpenTK.Input.Key.Space, OpenTK.Input.Key.LShift);
-            gameObject.Position += translation * speed;
+            transform.position += translation * speed;
 
-            gameObject.Rotate(gameObject.Up, Input.MouseDelta.X / 100);
-            gameObject.Rotate(gameObject.Right, Input.MouseDelta.Y / 100);
-            gameObject.Rotate(gameObject.Forward, Input.KeyAxis(OpenTK.Input.Key.E, OpenTK.Input.Key.Q) / 15);
+            //transform.Rotate(transform.up, Input.MouseDelta.X / 100);
+            //transform.Rotate(transform.right, Input.MouseDelta.Y / 100);
+            //transform.Rotate(transform.forward, Input.KeyAxis(OpenTK.Input.Key.E, OpenTK.Input.Key.Q) / 15);
+            transform.Rotate(new Vector3(Input.MouseDelta.Y / 100f, -Input.MouseDelta.X / 100f, Input.KeyAxis(OpenTK.Input.Key.Q, OpenTK.Input.Key.E) / 10f));
+
 
         }
     }

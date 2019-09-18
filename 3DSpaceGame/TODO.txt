@@ -27,6 +27,8 @@ TODO and PLANNING:
 	skybox {
 		shader? procedural?
 		cubeMaps
+
+		random julia set fractals in skybox?
 	}
 
 
@@ -51,6 +53,8 @@ TODO and PLANNING:
 		}
 
 	}
+
+	refactor transformations in Transform class
 
 	Assets manager {
 		<Done> - auto loading of OBJs
@@ -87,5 +91,12 @@ TODO and PLANNING:
 					- cold areas where there is ice astreoids
 				- scrap yard 
 		}
+
+		economy {
+			have economy based on real world models
+				todo: learn how economies work, khanacademy is my best friend 
+		}
 	}
+
+	
 

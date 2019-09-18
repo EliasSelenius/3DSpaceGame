@@ -6,7 +6,14 @@ using System.Threading.Tasks;
 
 namespace _3DSpaceGame {
     public abstract class Component {
+
+
+        // nameing rule violation
+#pragma warning disable IDE1006
         public GameObject gameObject { get; private set; }
+        public Transform transform => gameObject.transform;
+#pragma warning restore IDE1006
+
 
         public void Init(GameObject g) {
             gameObject = g;

@@ -72,28 +72,28 @@ namespace _3DSpaceGame {
 
             scene = new Scene();
 
-            var cam = scene.InitObject(new Camera());
-            cam.Position.Z += 3;
+            var cam = scene.InitObject(new Camera(), new CamFlyController());
+            cam.transform.position.Z += 3;
 
             var ship = scene.InitObject(new MeshRenderer(Assets.OBJs["StarterShip.obj"].GenMesh(), Material.Brass),
                              new PhysicsBody());
             ship.GetComp<PhysicsBody>().AddForce(0, 0, 1);
-            ship.Rotate(new Vector3(3.14f / 4f, 3.14f / 4f, 3.14f / 4f));
+            ship.transform.Rotate(new Vector3(3.14f / 4f, 3.14f / 4f, 3.14f / 4f));
 
             var frog = scene.InitObject(new MeshRenderer(Assets.OBJs["TheFrog.obj"].GenMesh(), Material.Silver),
                                     new PlayerShipController(),
                                     new PhysicsBody());
-            frog.Position.Y = 4;
+            frog.transform.position.Z = 10;
             //cam.parent = ship;
 
             var station = scene.InitObject(new MeshRenderer(Assets.OBJs["ClockWork.obj"].GenMesh(), new Material { ambient = new Vector3(.5f,0,0), diffuse = new Vector3(0, 1, 0), specular = new Vector3(1,1,1), shininess = .5f}));
-            station.Position.Z = -150;
-            station.Scale *= 15;
+            station.transform.position.Z = -150;
+            station.transform.scale *= 15;
 
             ship = scene.InitObject(new MeshRenderer(Assets.OBJs["spaceCraft.obj"].GenMesh(), Material.Bronze));
-            ship.Position = Vector3.One * 20;
+            ship.transform.position = Vector3.One * 20;
             ship = scene.InitObject(new MeshRenderer(Assets.OBJs["SpaceShip.obj"].GenMesh(), Material.Chrome));
-            ship.Position = Vector3.UnitX * 10;
+            ship.transform.position = Vector3.UnitX * 10;
 
             // test dir light
             ActiveShader.SetVec3("dirLight.color", 1f, 1f, 1f);
