@@ -84,6 +84,7 @@ namespace _3DSpaceGame {
                                     new PlayerShipController(),
                                     new PhysicsBody());
             frog.transform.position.Z = 10;
+            frog.transform.Rotate(Vector3.UnitY * MyMath.pi);
             //cam.parent = ship;
 
             var station = scene.InitObject(new MeshRenderer(Assets.OBJs["ClockWork.obj"].GenMesh(), new Material { ambient = new Vector3(.5f,0,0), diffuse = new Vector3(0, 1, 0), specular = new Vector3(1,1,1), shininess = .5f}));

@@ -8,9 +8,22 @@ using OpenTK;
 
 namespace _3DSpaceGame {
     public static class MyMath {
+
+        public const float pi = (float)Math.PI;
+        public const float tau = 2 * pi;
+
         public static Vector3 Lerp(Vector3 a, Vector3 b, float t) => a + ((b - a) * t);
+
         public static float Sin(float x) => (float)Math.Sin(x);
         public static float Cos(float x) => (float)Math.Cos(x);
         public static float Sqrt(float x) => (float)Math.Sqrt(x);
+        public static float Asin(float x) => (float)Math.Asin(x);
+        public static float Atan(float x) => (float)Math.Atan(x);
+        public static float Atan2(float x, float y) => (float)Math.Atan2(x, y);
+        public static float Acos(float x) => (float)Math.Acos(x);
+
+        public static string ToReadableStr(this float f) => f.ToString("###.###");
+        public static string ToReadableStr(this Vector3 vec) => $"({vec.X.ToReadableStr()}, {vec.Y.ToReadableStr()}, {vec.Z.ToReadableStr()})";
+
     }
 }

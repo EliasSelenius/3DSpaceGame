@@ -45,15 +45,41 @@ namespace _3DSpaceGame {
 
         public void LookAt(Vector3 point) => LookAt(point, Vector3.UnitY);
         public void LookAt(Vector3 point, Vector3 up) {
+
+            /*
+             x = cos(a)
+             z = sin(a)
+             a = acos(x) 
+             */
+
             var dir = (point - position).Normalized();
-            Console.WriteLine("dir: " + dir);
-            //var f = (position + forward) - position;
-            var f = forward;
-            var rotationaxis = Vector3.Cross(dir, f);
-            Console.WriteLine("axis: " + rotationaxis);
-            var angle = Vector3.CalculateAngle(dir, f);
-            Console.WriteLine("angle: " + angle);
-            Rotate(rotationaxis, angle / 10f);
+            float a = MyMath.Atan(dir.Z / dir.X);
+            if (dir.X < 0) {
+                a = MyMath.pi - a;
+            }
+            rotation = Quaternion.FromEulerAngles(new Vector3(0, a, 0));
+
+
+            //var targetDir = (point - position).Normalized();
+            //var currentDir = forward;
+            //var dot = Vector3.Dot(currentDir, targetDir);
+            //Console.WriteLine("dot: " + dot);
+            //var angle = MyMath.Acos(dot);
+            ////Console.WriteLine("angle: " + angle);
+            //var axis = Vector3.Cross(currentDir, targetDir);
+            //Rotate(axis, angle);
+
+            //var dir = (point - position).Normalized();
+            //dir.Z *= -1;
+            //Console.WriteLine("dir: " + dir);
+            ////var f = (position + forward) - position;
+            //var f = forward;
+            //var rotationaxis = Vector3.Cross(dir, f);
+            //Console.WriteLine("axis: " + rotationaxis);
+            //var angle = Vector3.CalculateAngle(dir, f);
+            //Console.WriteLine("angle: " + angle);
+            //Rotate(rotationaxis, angle / 10f);
+            //rotation.Normalize();
 
             //var f = (point - position).Normalized();
             //var l = Vector3.Cross(up, f);
@@ -71,6 +97,14 @@ namespace _3DSpaceGame {
             //rotation.X = (u.Z - f.Y) * recip;
             //rotation.Y = (f.X - r.Z) * recip;
             //rotation.Z = (r.Y - u.X) * recip;
+
+            //if ((targetPosition - m_Position) == glm::vec3(0, 0, 0)) return;
+            //var direction = Vector3.Normalize(point - position);
+            //var r = Vector3.Zero;
+            //r.X = MyMath.Asin(-direction.Y);
+            //r.Y = -MyMath.Atan2(-direction.X, -direction.Z);
+            //Console.WriteLine("angle: " + r);
+            //rotation = Quaternion.FromEulerAngles(r);
         }
 
     }
