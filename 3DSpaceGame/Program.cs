@@ -14,7 +14,7 @@ namespace _3DSpaceGame {
         public static GameWindow Window;
 
         public static Scene scene;
-        public static ShaderProgram ActiveShader;
+        public static ShaderProgram StandardShader;
 
         public static float DeltaTime;
 
@@ -64,11 +64,13 @@ namespace _3DSpaceGame {
 
             var f = new Shader(ShaderType.FragmentShader, System.IO.File.ReadAllText("data/shaders/frag.glsl"));
             var v = new Shader(ShaderType.VertexShader, System.IO.File.ReadAllText("data/shaders/vert.glsl"));
-            ActiveShader = new ShaderProgram(f, v);
+            StandardShader = new ShaderProgram(f, v);
             f.Dispose();
             v.Dispose();
 
             Assets.Load();
+
+            //Draw.Initialize();
 
             scene = new Scene();
 
@@ -77,14 +79,14 @@ namespace _3DSpaceGame {
 
             var ship = scene.InitObject(new MeshRenderer(Assets.OBJs["StarterShip.obj"].GenMesh(), Material.Brass),
                              new PhysicsBody());
-            ship.GetComp<PhysicsBody>().AddForce(0, 0, 1);
+            ship.GetComp<PhysicsBody>().AddForce(0, 10, -10);
             ship.transform.Rotate(new Vector3(3.14f / 4f, 3.14f / 4f, 3.14f / 4f));
 
             var frog = scene.InitObject(new MeshRenderer(Assets.OBJs["TheFrog.obj"].GenMesh(), Material.Silver),
                                     new PlayerShipController(),
                                     new PhysicsBody());
             frog.transform.position.Z = 10;
-            frog.transform.Rotate(Vector3.UnitY * MyMath.pi);
+            //frog.transform.Rotate(Vector3.UnitY * MyMath.pi);
             //cam.parent = ship;
 
             var station = scene.InitObject(new MeshRenderer(Assets.OBJs["ClockWork.obj"].GenMesh(), new Material { ambient = new Vector3(.5f,0,0), diffuse = new Vector3(0, 1, 0), specular = new Vector3(1,1,1), shininess = .5f}));
@@ -96,9 +98,17 @@ namespace _3DSpaceGame {
             ship = scene.InitObject(new MeshRenderer(Assets.OBJs["SpaceShip.obj"].GenMesh(), Material.Chrome));
             ship.transform.position = Vector3.UnitX * 10;
 
+
             // test dir light
-            ActiveShader.SetVec3("dirLight.color", 1f, 1f, 1f);
-            ActiveShader.SetVec3("dirLight.dir", -Vector3.One);
+            StandardShader.SetVec3("dirLight.color", 1f, 1f, 1f);
+            StandardShader.SetVec3("dirLight.dir", -Vector3.One);
+
+            Console.WriteLine(GLObject.ListInstances());
+
+            var glerror = GL.GetError();
+            if (glerror != ErrorCode.NoError) {
+                Console.WriteLine(glerror + " after load");
+            }
 
             // test point light
             //ActiveShader.SetVec3("pointLight.pos", Vector3.UnitX);
@@ -111,12 +121,17 @@ namespace _3DSpaceGame {
             Input.Update();
         }
 
+
         private static void Window_RenderFrame(object sender, FrameEventArgs e) {
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            ActiveShader.Use();
-            Camera.MainCamera.UpdateCamUniforms();
+            //Draw.Line(Vector3.Zero, Vector3.One);
+
+            StandardShader.Use();
+            Camera.MainCamera.UpdateCamUniforms(StandardShader);
             scene.Render();
+
+
 
             GL.Flush();
             Window.SwapBuffers();

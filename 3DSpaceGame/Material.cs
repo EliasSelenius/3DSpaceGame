@@ -14,10 +14,10 @@ namespace _3DSpaceGame {
         public float shininess;
 
         public void Apply() {
-            Program.ActiveShader.SetVec3("material.ambient", ambient);
-            Program.ActiveShader.SetVec3("material.diffuse", diffuse);
-            Program.ActiveShader.SetVec3("material.specular", specular);
-            Program.ActiveShader.SetFloat("material.shininess", shininess);
+            Program.StandardShader.SetVec3("material.ambient", ambient);
+            Program.StandardShader.SetVec3("material.diffuse", diffuse);
+            Program.StandardShader.SetVec3("material.specular", specular);
+            Program.StandardShader.SetFloat("material.shininess", shininess);
         }
 
 

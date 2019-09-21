@@ -44,6 +44,8 @@ TODO and PLANNING:
 		- upgrade object shader to use blinn-phong lightning model
 		- upgrade object shader to support multiple point lights
 
+		- DebugDrawing shader
+
 		- system for image effect shaders
 		- image effect shaders {
 			- bloom
@@ -54,10 +56,16 @@ TODO and PLANNING:
 
 	}
 
-	refactor transformations in Transform class
+	DebugDrawing {
+		lines
+	}
+
+	<Done> - refactor transformations in Transform class
+	- Transform.LookAt()
 
 	Assets manager {
 		<Done> - auto loading of OBJs
+		auto loading shaders
 	}
 
 

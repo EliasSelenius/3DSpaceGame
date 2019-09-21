@@ -36,6 +36,9 @@
     <Reference Include="Glow">
       <HintPath>..\..\Glow\Glow\bin\Debug\Glow.dll</HintPath>
     </Reference>
+    <Reference Include="Nums">
+      <HintPath>..\..\Nums\bin\Debug\Nums.dll</HintPath>
+    </Reference>
     <Reference Include="OpenTK, Version=3.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenTK.3.1.0\lib\net20\OpenTK.dll</HintPath>
     </Reference>
@@ -53,6 +56,7 @@
     <Compile Include="CamFlyController.cs" />
     <Compile Include="Assets.cs" />
     <Compile Include="Component.cs" />
+    <Compile Include="Draw.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="Input.cs" />
     <Compile Include="Material.cs" />
@@ -104,6 +108,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="data\models\TheFrog.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\shaders\debugdraw.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="data\shaders\frag.glsl">

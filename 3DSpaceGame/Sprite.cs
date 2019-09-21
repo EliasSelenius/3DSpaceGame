@@ -32,8 +32,8 @@ namespace _3DSpaceGame {
             vao.SetBuffer(OpenTK.Graphics.OpenGL4.BufferTarget.ArrayBuffer, vbo);
             vao.SetBuffer(OpenTK.Graphics.OpenGL4.BufferTarget.ElementArrayBuffer, ebo);
 
-            vao.AttribPointer(Program.ActiveShader.GetAttribLocation("v_pos"), 3, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 5, 0);
-            vao.AttribPointer(Program.ActiveShader.GetAttribLocation("v_uv"), 2, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 5, sizeof(float) * 3);
+            vao.AttribPointer(Program.StandardShader.GetAttribLocation("v_pos"), 3, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 5, 0);
+            vao.AttribPointer(Program.StandardShader.GetAttribLocation("v_uv"), 2, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 5, sizeof(float) * 3);
         }
 
         public readonly Texture2D texture;

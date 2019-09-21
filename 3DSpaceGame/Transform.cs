@@ -43,8 +43,53 @@ namespace _3DSpaceGame {
         }
 
 
+        public void LookIn(Vector3 dir) => LookIn(dir, Vector3.UnitY);
+        public void LookIn(Vector3 dir, Vector3 up) {
+            var m = Matrix4.LookAt(position, position + dir, up).Inverted();
+            m.Row0.Xyz = -m.Row0.Xyz;
+            m.Row2.Xyz = -m.Row2.Xyz;
+            rotation = m.ExtractRotation();
+        }
+
         public void LookAt(Vector3 point) => LookAt(point, Vector3.UnitY);
         public void LookAt(Vector3 point, Vector3 up) {
+
+            var m = Matrix4.LookAt(position, point, up).Inverted();
+            m.Row0.Xyz = -m.Row0.Xyz;
+            m.Row2.Xyz = -m.Row2.Xyz;
+            rotation = m.ExtractRotation();
+
+            //var z = (point - position).Normalized();
+            //var y = up;
+            //var x = Vector3.Cross(y, z).Normalized();
+            //y = Vector3.Cross(x, z).Normalized();
+            //var rotm = new Matrix3();
+            //rotm.Row0.X = x.X;
+            //rotm.Row1.X = x.Y;
+            //rotm.Row2.X = x.Z;
+
+            //rotm.Row0.Y = y.X;
+            //rotm.Row1.Y = y.Y;
+            //rotm.Row2.Y = y.Z;
+
+            //rotm.Row0.Z = z.X;
+            //rotm.Row1.Z = z.Y;
+            //rotm.Row2.Z = z.Z;
+
+            //rotation = Quaternion.FromMatrix(rotm);
+
+            //var lookdir = forward.ToNumsVec();
+            //var targetdir = -(point - position).ToNumsVec();
+            //var rotaxis = (lookdir.Cross(targetdir));
+            //var angle = lookdir.AngleTo(targetdir);
+            //Rotate(rotaxis.ToOpenTKVec(), -.1f);
+
+
+            //var lookdir = forward;
+            //var targetdir = (point - position);
+            //var rotaxis = Vector3.Cross(lookdir, targetdir);
+            //var angle = Vector3.CalculateAngle(lookdir, targetdir);
+            //Rotate(rotaxis, .1f);
 
             /*
              x = cos(a)
@@ -52,20 +97,16 @@ namespace _3DSpaceGame {
              a = acos(x) 
              */
 
-            var dir = (point - position).Normalized();
-            float a = MyMath.Atan(dir.Z / dir.X);
-            if (dir.X < 0) {
-                a = MyMath.pi - a;
-            }
-            rotation = Quaternion.FromEulerAngles(new Vector3(0, a, 0));
+            //var dir = (point - position).Normalized();
+            //float ya = MyMath.Atan(dir.Z / dir.X) + (dir.X < 0 ? MyMath.pi : 0);
+            //float xa = MyMath.Atan(dir.Y / dir.Z) * (dir.Z < 0 ? 1 : -1);
+            //rotation = Quaternion.FromEulerAngles(0, -ya + MyMath.pi / 2f, 0) * Quaternion.FromEulerAngles(xa, 0, 0);
 
 
-            //var targetDir = (point - position).Normalized();
+            //var targetDir = (point - position);
             //var currentDir = forward;
-            //var dot = Vector3.Dot(currentDir, targetDir);
-            //Console.WriteLine("dot: " + dot);
+            //var dot = Vector3.Dot(currentDir, targetDir) ;
             //var angle = MyMath.Acos(dot);
-            ////Console.WriteLine("angle: " + angle);
             //var axis = Vector3.Cross(currentDir, targetDir);
             //Rotate(axis, angle);
 

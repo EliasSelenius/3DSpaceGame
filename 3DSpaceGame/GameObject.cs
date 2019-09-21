@@ -92,7 +92,7 @@ namespace _3DSpaceGame {
         }
 
         public void Render() {
-            Program.ActiveShader.SetMat4("obj_transform", ModelMatrix);
+            Program.StandardShader.SetMat4("obj_transform", ModelMatrix);
             foreach (var item in components) {
                 item.Render();
             }
