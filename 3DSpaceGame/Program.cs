@@ -74,7 +74,7 @@ namespace _3DSpaceGame {
 
             scene = new Scene();
 
-            var cam = scene.InitObject(new Camera(), new CamFlyController());
+            var cam = scene.InitObject(new Camera());
             cam.transform.position.Z += 3;
 
             var ship = scene.InitObject(new MeshRenderer(Assets.OBJs["StarterShip.obj"].GenMesh(), Material.Brass),

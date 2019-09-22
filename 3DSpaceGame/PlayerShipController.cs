@@ -23,22 +23,35 @@ namespace _3DSpaceGame {
             mouseOffset += Input.MouseDelta / 100f;
             //p.AddTorque(new Vector3(mdelta.Y, -mdelta.X, 0));
 
-            var offset = -transform.forward;
-            offset *= MyMath.Cos(mouseOffset.X);
-            offset += transform.right * MyMath.Sin(mouseOffset.X);
-            var newcampos = offset * 5f + transform.up * 1.5f;
+            //var offset = -transform.forward;
+            //offset *= MyMath.Cos(mouseOffset.X);
+            //offset += transform.right * MyMath.Sin(mouseOffset.X);
+            //var newcampos = offset * 5f + transform.up * 1.5f;
 
-            transform.LookAt(Camera.MainCamera.transform.position);
+            //var mxn = MyMath.NormAngle(mouseOffset.X);
+            //var myn = MyMath.NormAngle(mouseOffset.Y);
 
-            //Camera.MainCamera.gameObject.Position = MyMath.Lerp(Camera.MainCamera.gameObject.Position, gameObject.Position - gameObject.Forward * 5f + gameObject.Up * 1.5f, .9f);
-            //Camera.MainCamera.transform.position = transform.position + newcampos;
+            //var cpos = new Vector3(
+            //    MyMath.Cos(mxn) * MyMath.Cos(myn),
+            //    MyMath.Sin(myn),
+            //    MyMath.Sin(mxn) * MyMath.Cos(myn)) * 4;
+
+
+            // Transform.transformPoint() = (new Vector4(cpos) * transform.matrix).Xyz + transform.position;
+
+
+            //Camera.MainCamera.transform.position
             //Camera.MainCamera.transform.rotation = transform.rotation;
-            //Camera.MainCamera.transform.LookAt(transform.position);
+            Camera.MainCamera.transform.LookAt(transform.position, transform.up);
 
+            if (!Input.IsKeyDown(OpenTK.Input.Key.AltLeft)) {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Camera.MainCamera.transform.rotation, .05f);
+            }
+            
             var i = Input.Wasd;
             var f = transform.forward * i.Y;
             f += transform.left * i.X;
-            //p.AddForce(f);
+            p.AddForce(f);
 
         }
     }

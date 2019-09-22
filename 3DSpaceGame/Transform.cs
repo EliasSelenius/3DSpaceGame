@@ -59,6 +59,7 @@ namespace _3DSpaceGame {
             m.Row2.Xyz = -m.Row2.Xyz;
             rotation = m.ExtractRotation();
 
+            #region Failed LookAt attempts
             //var z = (point - position).Normalized();
             //var y = up;
             //var x = Vector3.Cross(y, z).Normalized();
@@ -146,6 +147,11 @@ namespace _3DSpaceGame {
             //r.Y = -MyMath.Atan2(-direction.X, -direction.Z);
             //Console.WriteLine("angle: " + r);
             //rotation = Quaternion.FromEulerAngles(r);
+            #endregion
+        }
+
+        public void RotateAround(Vector3 point, Quaternion rot) {
+            
         }
 
     }

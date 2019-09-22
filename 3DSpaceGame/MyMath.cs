@@ -22,6 +22,15 @@ namespace _3DSpaceGame {
         public static float Atan2(float x, float y) => (float)Math.Atan2(x, y);
         public static float Acos(float x) => (float)Math.Acos(x);
 
+        public static float Floor(float x) => (float)Math.Floor(x);
+        public static float Fract(float x) => x - Floor(x);
+
+        public static float NormAngle(float x) {
+            return Fract(x / tau) * tau;
+        }
+
+        public static float Clamp(float v, float min, float max) => v < min ? min : v > max ? max : v;
+
         public static Nums.Vectors.Vec3 ToNumsVec(this Vector3 v) => new Nums.Vectors.Vec3(v.X, v.Y, v.Z);
         public static Vector3 ToOpenTKVec(this Nums.Vectors.Vec3 v) => new Vector3(v.x, v.y, v.z);
 
