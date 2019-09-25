@@ -36,12 +36,10 @@ TODO and PLANNING:
 		space dust particles when flying to get a sense of movement
 	}
 
-	- upgrade camera/ship controller {
-		
-	}
+	<Done> - upgrade camera/ship controller 
 
 	Shaders {
-		- upgrade object shader to use blinn-phong lightning model
+		<Done> - upgrade object shader to use blinn-phong lightning model
 		- upgrade object shader to support multiple point lights
 
 		- DebugDrawing shader
@@ -61,7 +59,7 @@ TODO and PLANNING:
 	}
 
 	<Done> - refactor transformations in Transform class
-	- Transform.LookAt()
+	<Done> - Transform.LookAt()
 
 	Assets manager {
 		<Done> - auto loading of OBJs
@@ -104,6 +102,23 @@ TODO and PLANNING:
 			have economy based on real world models
 				todo: learn how economies work, khanacademy is my best friend 
 		}
+	}
+
+
+	User interface system {
+	
+		canvas class 
+
+		UIElement
+			box-model
+				width*height
+				position/relative position
+			OnHover()
+			OnClick()
+
+		shader for drawing UIElement
+
+		text rendering
 	}
 
 	

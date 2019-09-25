@@ -37,5 +37,22 @@ namespace _3DSpaceGame {
         public static string ToReadableStr(this float f) => f.ToString("###.###");
         public static string ToReadableStr(this Vector3 vec) => $"({vec.X.ToReadableStr()}, {vec.Y.ToReadableStr()}, {vec.Z.ToReadableStr()})";
 
+        public static Quaternion Rotate(this Quaternion rot, Vector3 axis, float angle) => rot * Quaternion.FromAxisAngle(axis, angle);
+        public static Quaternion Rotate(this Quaternion rot, Vector3 euler) => rot * Quaternion.FromEulerAngles(euler);
+        public static Quaternion Cnjgt(this Quaternion rot) {
+            var c = rot;
+            c.Conjugate();
+            return c;
+        }
+
+        public static Vector3 Rotate(this Vector3 v, Quaternion rot) {
+            return (rot * new Quaternion(v, 0) * rot.Cnjgt()).Xyz;
+        }
+
+        public static Vector3 CalcForward(this Quaternion rot) => 
+            new Vector3(2f * (rot.X * rot.Z + rot.W * rot.Y),
+                       2f * (rot.Y * rot.Z - rot.W * rot.X),
+                       1f - 2f * (rot.X * rot.X + rot.Y * rot.Y));
+
     }
 }

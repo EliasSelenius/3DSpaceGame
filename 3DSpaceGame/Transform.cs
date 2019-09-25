@@ -150,8 +150,29 @@ namespace _3DSpaceGame {
             #endregion
         }
 
+        public void RotateAround(Vector3 point, Vector3 axis, float angle) => RotateAround(point, Quaternion.FromAxisAngle(axis, angle));
+        public void RotateAround(Vector3 point, Vector3 euler) => RotateAround(point, Quaternion.FromEulerAngles(euler));
         public void RotateAround(Vector3 point, Quaternion rot) {
-            
+            var v = position - point;
+            var r = RotateVector(rot, v);
+            position = point + r;
+        }
+
+        public static Vector3 RotateVector(Quaternion rot, Vector3 v) {
+            var qv = new Quaternion(v, 0);
+            var c = rot;
+            c.Conjugate();
+            return (rot * qv * c).Xyz;
+        }
+
+        public Vector3 DirTo(Vector3 point) => point - position;
+        public Vector3 DirTo(Transform t) => t.position - position;
+        public float DistTo(Vector3 point) => DirTo(point).Length;
+        public float DistTo(Transform t) => DirTo(t).Length;
+
+        public void SetDistTo(Vector3 point, float dist) {
+            var dir = position - point;
+            position = point + (dir.Normalized() * dist);
         }
 
     }
