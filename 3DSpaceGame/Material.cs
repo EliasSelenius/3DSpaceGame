@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Glow;
 using OpenTK;
 
 namespace _3DSpaceGame {
@@ -13,11 +14,11 @@ namespace _3DSpaceGame {
         public Vector3 specular;
         public float shininess;
 
-        public void Apply() {
-            Program.StandardShader.SetVec3("material.ambient", ambient);
-            Program.StandardShader.SetVec3("material.diffuse", diffuse);
-            Program.StandardShader.SetVec3("material.specular", specular);
-            Program.StandardShader.SetFloat("material.shininess", shininess);
+        public void Apply(ShaderProgram shader) {
+            shader.SetVec3("material.ambient", ambient);
+            shader.SetVec3("material.diffuse", diffuse);
+            shader.SetVec3("material.specular", specular);
+            shader.SetFloat("material.shininess", shininess);
         }
 
 

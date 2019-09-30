@@ -28,11 +28,10 @@ namespace _3DSpaceGame {
             camrot = camrot.Rotate(new Vector3(Input.MouseDelta.Y / 100f, -Input.MouseDelta.X / 100f, 0));
 
             Camera.MainCamera.transform.position = transform.position + camrot.CalcForward() * -10;
-            Camera.MainCamera.transform.LookAt(transform.position, transform.up);
+            Camera.MainCamera.transform.LookAt(transform.position, camrot.CalcUp());
             
             if (!Input.IsKeyDown(OpenTK.Input.Key.AltLeft)) {
                 transform.rotation = Quaternion.Slerp(transform.rotation, camrot, .05f);
-                //Camera.MainCamera.transform.position = transform.position + transform.back.Rotate(camrot) * 10;
             }
 
 

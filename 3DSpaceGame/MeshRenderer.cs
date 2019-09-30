@@ -17,7 +17,8 @@ namespace _3DSpaceGame {
         }
 
         public override void Render() {
-            material.Apply();
+            Program.StandardShader.SetMat4("obj_transform", gameObject.ModelMatrix);
+            material.Apply(Program.StandardShader);
             mesh.Render();
         }
 

@@ -10,51 +10,43 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace _3DSpaceGame {
     public static class Draw {
+        static readonly VertexArray vao;
+        static readonly Buffer<float> vbo;
+        static readonly Buffer<uint> ebo;
 
-        private static VertexArray lineVao;
-        private static Buffer<float> lineVbo;
-        private static Buffer<uint> lineEbo;
+        static Draw() {
+            vbo = new Buffer<float>();
+            vbo.Initialize(new float[] {
+                -.5f, -.5f, 0f, 1, 0,
+                -.5f,  .5f, 0f, 0, 0,
+                 .5f, -.5f, 0f, 1, 1,
+                 .5f,  .5f, 0f, 0, 1
+            }, OpenTK.Graphics.OpenGL4.BufferUsageHint.StaticDraw);
 
-        private static ShaderProgram shader;
+            ebo = new Buffer<uint>();
+            ebo.Initialize(new uint[] {
+                0, 1, 2,
+                3, 2, 1
+            }, OpenTK.Graphics.OpenGL4.BufferUsageHint.StaticDraw);
 
-        public static void Initialize() {
+            vao = new VertexArray();
+            vao.SetBuffer(OpenTK.Graphics.OpenGL4.BufferTarget.ArrayBuffer, vbo);
+            vao.SetBuffer(OpenTK.Graphics.OpenGL4.BufferTarget.ElementArrayBuffer, ebo);
 
-            shader = Assets.Shaders["debugdraw.glsl"];
-
-            shader.Use();
-
-            lineVao = new VertexArray();
-            lineVbo = new Buffer<float>();
-            lineVbo.Initialize(new float[] { 0, 0, 0, 0, 0, 1 }, OpenTK.Graphics.OpenGL4.BufferUsageHint.StaticDraw);
-            lineVao.SetBuffer(OpenTK.Graphics.OpenGL4.BufferTarget.ArrayBuffer, lineVbo);
-            lineEbo = new Buffer<uint>();
-            lineEbo.Initialize(new uint[] { 0, 1 }, OpenTK.Graphics.OpenGL4.BufferUsageHint.StaticDraw);
-            lineVao.SetBuffer(OpenTK.Graphics.OpenGL4.BufferTarget.ElementArrayBuffer, lineEbo);
-            lineVao.AttribPointer(shader.GetAttribLocation("pos"), 3, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 3, 0);
-
-            //Console.WriteLine(GL.GetError());
-
-            //test = new Mesh(new[] {
-            //    new Vertex(Vector3.Zero, Vector2.Zero, Vector3.UnitZ),
-            //    new Vertex(Vector3.UnitX, Vector2.UnitX, Vector3.UnitZ),
-            //    new Vertex(Vector3.UnitY, Vector2.UnitY, Vector3.UnitZ)
-            //}, new uint[] {
-            //    0, 1, 2
-            //});
-            //test.Init();
+            vao.AttribPointer(Program.StandardShader.GetAttribLocation("v_pos"), 3, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 5, 0);
+            vao.AttribPointer(Program.StandardShader.GetAttribLocation("v_uv"), 2, OpenTK.Graphics.OpenGL4.VertexAttribPointerType.Float, false, sizeof(float) * 5, sizeof(float) * 3);
+        }
+        
+        public static void Sprite() {
+            vao.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 6, OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt);
         }
 
-        //private static readonly Mesh test;
-
-        public static void Line(Vector3 p, Vector3 dir) {
-            shader.Use();
-            //Camera.MainCamera.UpdateCamUniforms(shader);
-            lineVao.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 2, OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt);
-            //Program.StandardShader.SetMat4("obj_transform", Matrix4.Identity);
-            //Material.Emerald.Apply();
-            //test.Render();
+        public static void Cube() {
 
         }
 
+        public static void Point() {
+            vao.DrawElements(PrimitiveType.Points, 1, DrawElementsType.UnsignedInt);
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace _3DSpaceGame {
 
         public float mass = 1;
         public Vector3 motion;
-        public Vector3 rotmotion;
+        public Quaternion rotmotion = Quaternion.Identity;
         public float drag = .03f;
         public float rotdrag = .05f;
 
@@ -25,13 +25,18 @@ namespace _3DSpaceGame {
 
         public override void EarlyUpdate() {
             transform.position += motion * Program.DeltaTime;
-            transform.Rotate(rotmotion * Program.DeltaTime);
+            //transform.Rotate(rotmotion);
             motion *= 1 - drag;
             rotmotion *= 1 - rotdrag;
         }
 
-        public void AddTorque(Vector3 torque) {
-            rotmotion += torque / mass;
+        public void AddTorque(Quaternion torque) {
+            var axisangle = torque.ToAxisAngle();
+            rotmotion *= Quaternion.FromAxisAngle(axisangle.Xyz, axisangle.W / mass);
+        }
+
+        public void AddTorque(Vector3 eulertorque) {
+            AddTorque(Quaternion.FromEulerAngles(eulertorque));
         }
 
         public void AddForce(Vector3 force) {

@@ -21,7 +21,7 @@ namespace _3DSpaceGame {
         }
     }
 
-    public class Mesh {
+    public class Mesh : IRenderable {
 
         private VertexArray vao;
         private Buffer<Vertex> vbo;

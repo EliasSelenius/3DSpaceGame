@@ -169,6 +169,8 @@ namespace _3DSpaceGame {
         public Vector3 DirTo(Transform t) => t.position - position;
         public float DistTo(Vector3 point) => DirTo(point).Length;
         public float DistTo(Transform t) => DirTo(t).Length;
+        public float DistToSq(Vector3 point) => (point - position).LengthSquared;
+        public float DistToSq(Transform t) => (t.position - position).LengthSquared;
 
         public void SetDistTo(Vector3 point, float dist) {
             var dir = position - point;

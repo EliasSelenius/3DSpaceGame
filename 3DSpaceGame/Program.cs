@@ -18,6 +18,7 @@ namespace _3DSpaceGame {
 
         public static float DeltaTime;
 
+
         static void Main(string[] args) {
 
             Window = new GameWindow(1600, 900);
@@ -82,14 +83,16 @@ namespace _3DSpaceGame {
             ship.GetComp<PhysicsBody>().AddForce(0, 10, -10);
             ship.transform.Rotate(new Vector3(3.14f / 4f, 3.14f / 4f, 3.14f / 4f));
 
-            var frog = scene.InitObject(new MeshRenderer(Assets.OBJs["TheFrog.obj"].GenMesh(), Material.Silver),
+            var frogmesh = Assets.OBJs["TheFrog.obj"].GenMesh();
+            var frog = scene.InitObject(new MeshRenderer(frogmesh, Material.Silver),
                                     new PlayerShipController(),
-                                    new PhysicsBody());
+                                    new PhysicsBody(),
+                                    new SpaceDustParticles());
             frog.transform.position.Z = 10;
             //frog.transform.Rotate(Vector3.UnitY * MyMath.pi);
             //cam.parent = ship;
 
-            var station = scene.InitObject(new MeshRenderer(Assets.OBJs["ClockWork.obj"].GenMesh(), new Material { ambient = new Vector3(.5f,0,0), diffuse = new Vector3(0, 1, 0), specular = new Vector3(1,1,1), shininess = .5f}));
+            var station = scene.InitObject(new MeshRenderer(Assets.OBJs["ClockWork.obj"].GenMesh(), Material.CyanRubber));
             station.transform.position.Z = -150;
             station.transform.scale *= 15;
 

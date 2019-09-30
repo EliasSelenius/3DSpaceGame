@@ -26,7 +26,7 @@ namespace _3DSpaceGame {
                 return m;
             }
         }
-
+        
 
         #region Components
 
@@ -92,7 +92,6 @@ namespace _3DSpaceGame {
         }
 
         public void Render() {
-            Program.StandardShader.SetMat4("obj_transform", ModelMatrix);
             foreach (var item in components) {
                 item.Render();
             }

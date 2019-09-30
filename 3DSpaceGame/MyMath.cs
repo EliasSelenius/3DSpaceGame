@@ -54,5 +54,15 @@ namespace _3DSpaceGame {
                        2f * (rot.Y * rot.Z - rot.W * rot.X),
                        1f - 2f * (rot.X * rot.X + rot.Y * rot.Y));
 
+        public static Vector3 CalcRight(this Quaternion rot) =>
+            new Vector3(1f - 2f * (rot.Y * rot.Y + rot.Z * rot.Z),
+                       2f * (rot.X * rot.Y + rot.W * rot.Z),
+                       2f * (rot.X * rot.Z - rot.W * rot.Y));
+        
+        public static Vector3 CalcUp(this Quaternion rot) =>
+            new Vector3(2f * (rot.X * rot.Y - rot.W * rot.Z),
+                       1f - 2f * (rot.X * rot.X + rot.Z * rot.Z),
+                       2f * (rot.Y * rot.Z + rot.W * rot.X));
+
     }
 }
