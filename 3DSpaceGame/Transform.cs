@@ -26,6 +26,19 @@ namespace _3DSpaceGame {
         public Quaternion rotation = Quaternion.Identity;
 
 
+        public Transform() { }
+        public Transform(Vector3 pos) => position = pos;
+        public Transform(Vector3 pos, Vector3 scl) {
+            position = pos; scale = scl;
+        }
+        public Transform(Quaternion rot) => rotation = rot;
+        public Transform(Vector3 pos, Quaternion rot) {
+            position = pos; rotation = rot;
+        }
+        public Transform(Vector3 pos, Vector3 scl, Quaternion rot) {
+            position = pos; scale = scl; rotation = rot;
+        }
+
         public void Translate(Vector3 v) {
             position += v;
         }

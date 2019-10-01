@@ -32,8 +32,11 @@ TODO and PLANNING:
 	}
 
 
-	particle System {
-		space dust particles when flying to get a sense of movement
+	particles {
+		<WIP> - abstract ParticleSystem
+
+		- space dust particles when flying to get a sense of movement
+		- rocket engine flames
 	}
 
 	<Done> - upgrade camera/ship controller 
@@ -43,6 +46,8 @@ TODO and PLANNING:
 		- upgrade object shader to support multiple point lights
 
 		- DebugDrawing shader
+
+		- Shader preProcessor for abstraction and refactoring of glsl code
 
 		- system for image effect shaders
 		- image effect shaders {
@@ -119,6 +124,24 @@ TODO and PLANNING:
 		shader for drawing UIElement
 
 		text rendering
+	}
+
+	prefab system {
+		a prefab describes a gameObject:
+			transform,
+			components list
+				the type and constructor arguments
+			parent object
+
+		class Prefab {
+			static FromFile() // load from file formats 
+			static FromObj() // create from exsisting object
+			GameObject InitializeInstance() // create a new instance of the prefab
+		}
+
+		todos:
+			<Done> - Init GameObject from Prefab class
+			- load Prefab object from file
 	}
 
 	

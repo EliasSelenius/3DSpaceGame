@@ -68,6 +68,7 @@
     <Compile Include="ParticleSystem.cs" />
     <Compile Include="PhysicsBody.cs" />
     <Compile Include="PlayerShipController.cs" />
+    <Compile Include="Prefab.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Random.cs" />
@@ -114,6 +115,7 @@
     <None Include="data\models\TheFrog.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="data\prefabs\firstTest.prefab" />
     <None Include="data\shaders\debugdraw.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

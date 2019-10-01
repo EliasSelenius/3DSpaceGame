@@ -102,6 +102,11 @@ namespace _3DSpaceGame {
             ship.transform.position = Vector3.UnitX * 10;
 
 
+            new Prefab(new Transform())
+                .AddComp<MeshRenderer>(frogmesh, Material.Obsidian)
+                .NewInstance().EnterScene(scene);
+
+
             // test dir light
             StandardShader.SetVec3("dirLight.color", 1f, 1f, 1f);
             StandardShader.SetVec3("dirLight.dir", -Vector3.One);

@@ -78,7 +78,7 @@ namespace _3DSpaceGame {
 
                     UpdateParticle(p);
 
-                    if (p.time > LifeTime) {
+                    if (ParticleEndCondition(p)) {
                         p.Reset();
                     }
                 }
@@ -121,6 +121,7 @@ namespace _3DSpaceGame {
             }
         }
 
+        protected virtual bool ParticleEndCondition(Particle p) => p.time > LifeTime;
         protected abstract void StartParticle(Particle p);
         protected abstract void UpdateParticle(Particle p);
         protected abstract void RenderParticle(Particle p);
