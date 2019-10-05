@@ -14,11 +14,7 @@ namespace _3DSpaceGame {
         public Vector3 velocity;
         public bool enabled = false;
 
-        public void Update() {
-            time += Program.DeltaTime;
-            transform.Translate(velocity * Program.DeltaTime);
-        }
-
+        
         public void Reset() {
             time = 0;
             enabled = false;
@@ -43,8 +39,6 @@ namespace _3DSpaceGame {
                                                            select o;
 
         protected bool LocalCoords;
-        protected float LifeTime;
-        protected float SpawnRate;
 
         protected int ParticleCount {
             get => particles.Count;
@@ -63,9 +57,9 @@ namespace _3DSpaceGame {
             }
         }
         
-        public ParticleSystem(float rate, float lifeTime, bool local = true) {
-            SpawnRate = rate; LifeTime = lifeTime; LocalCoords = local;
-            ParticleCount = (int)(SpawnRate * LifeTime);
+        public ParticleSystem(int pcount, bool local = true) {
+            ParticleCount = pcount;
+            LocalCoords = local;
         }
 
         public override void EarlyUpdate() {
@@ -74,7 +68,9 @@ namespace _3DSpaceGame {
             for (int i = 0; i < particles.Count; i++) {
                 var p = particles[i];
                 if (p.enabled) {
-                    p.Update();
+
+                    p.time += Program.DeltaTime;
+                    p.transform.Translate(p.velocity * Program.DeltaTime);
 
                     UpdateParticle(p);
 
@@ -83,16 +79,14 @@ namespace _3DSpaceGame {
                     }
                 }
             }
-
-            // spawn particles
-            Spawn(SpawnRate * Program.DeltaTime);
         }
 
         private float particlesQued = 0;
-        public void Spawn(float num) {
+        public void Queue(float num) {
             particlesQued += num;
             for (int i = 0; i < MyMath.Floor(particlesQued); i++) {
                 Spawn();
+                particlesQued--;
             }
         }
 
@@ -101,7 +95,6 @@ namespace _3DSpaceGame {
                 var p = DisabledParticles.ElementAt(0);
                 p.enabled = true;
                 StartParticle(p);
-                particlesQued--;
             }
         }
 
@@ -110,7 +103,7 @@ namespace _3DSpaceGame {
             for (int i = 0; i < particles.Count; i++) {
                 var p = particles[i];
                 if (!p.enabled) {
-                    return;
+                    continue;
                 }
                 var m = p.transform.matrix;
                 if (LocalCoords) {
@@ -121,57 +114,10 @@ namespace _3DSpaceGame {
             }
         }
 
-        protected virtual bool ParticleEndCondition(Particle p) => p.time > LifeTime;
+        protected abstract bool ParticleEndCondition(Particle p);
         protected abstract void StartParticle(Particle p);
         protected abstract void UpdateParticle(Particle p);
         protected abstract void RenderParticle(Particle p);
 
-    }
-
-    public class PointEmission : ParticleSystem {
-
-        private readonly IRenderable renderable;
-
-        public PointEmission(IRenderable r, float rate, float lifeTime, bool local = true) : base(rate, lifeTime, local) {
-            renderable = r;
-        }
-
-        protected override void StartParticle(Particle p) {
-            p.transform.position = Random.UnitVec3() * Random.Rangef(10) + (LocalCoords ? Vector3.Zero : transform.position);
-        }
-
-        protected override void RenderParticle(Particle p) {
-            renderable.Render();
-        }
-
-        protected override void UpdateParticle(Particle p) {
-
-
-        }
-    }
-
-    public class GravitationalParticles : ParticleSystem {
-        public GravitationalParticles(float rate, float lifeTime) : base(rate, lifeTime, false) {
-        }
-
-        protected override void RenderParticle(Particle p) {
-            //Draw.Sprite();
-            Draw.Point();
-        }
-
-        protected override void StartParticle(Particle p) {
-            p.transform.position = transform.position + Random.Vec3(30);
-            p.velocity = Random.Vec3(2);
-        }
-
-        protected override void UpdateParticle(Particle p) {
-            for (int i = 0; i < EnabledParticles.Count(); i++) {
-                var o = EnabledParticles.ElementAt(i);
-                if (p == o) {
-                    return;
-                }
-                p.velocity += p.transform.DirTo(o.transform).Normalized() * (1f / p.transform.DistToSq(o.transform)) * .1f;
-            }
-        }
     }
 }

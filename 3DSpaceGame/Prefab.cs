@@ -10,6 +10,7 @@ namespace _3DSpaceGame {
         private readonly Transform transform;
         private readonly Dictionary<Type, object[]> components = new Dictionary<Type, object[]>();
 
+
         public Prefab(Transform t) {
             transform = t;
         }

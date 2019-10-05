@@ -20,6 +20,7 @@ namespace _3DSpaceGame {
             //LoadShaders();
 
             //LoadShader("data/shaders/debugdraw.glsl", "debugdraw.glsl");
+            LoadShader("data/shaders/userInterface.glsl", "userInterface.glsl");
         }
 
         private static DirectoryInfo CurrentDir = new DirectoryInfo(Directory.GetCurrentDirectory());

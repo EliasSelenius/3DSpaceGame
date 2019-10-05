@@ -55,6 +55,7 @@
     <Compile Include="Camera.cs" />
     <Compile Include="CamFlyController.cs" />
     <Compile Include="Assets.cs" />
+    <Compile Include="UI\Canvas.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Draw.cs" />
     <Compile Include="GameObject.cs" />
@@ -76,6 +77,12 @@
     <Compile Include="SpaceDustParticles.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="Transform.cs" />
+    <Compile Include="UI\Graphics.cs" />
+    <Compile Include="UI\IElement.cs" />
+    <Compile Include="UI\Element.cs" />
+    <Compile Include="UI\ParentElement.cs" />
+    <Compile Include="UI\RectTransform.cs" />
+    <Compile Include="UI\Unit.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -129,6 +136,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="data\shaders\skybox.glsl" />
+    <None Include="data\shaders\userInterface.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="data\shaders\vert.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -142,6 +142,7 @@ TODO and PLANNING:
 		todos:
 			<Done> - Init GameObject from Prefab class
 			- load Prefab object from file
+			- make prefab from GameObject
 	}
 
 	

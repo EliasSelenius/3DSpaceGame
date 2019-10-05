@@ -9,7 +9,7 @@ namespace _3DSpaceGame {
 
         private MeshRenderer mr;
 
-        public SpaceDustParticles() : base(10, 3, false) {
+        public SpaceDustParticles() : base(10, false) {
 
         }
 
@@ -27,8 +27,8 @@ namespace _3DSpaceGame {
         }
 
         protected override void StartParticle(Particle p) {
-            p.transform.position = transform.position + Random.Vec3(15);
-            p.velocity = Random.Vec3(2);
+            p.transform.position = transform.position + Random.Vec3(20);
+            p.velocity = Random.Vec3(.4f);
             p.transform.scale = OpenTK.Vector3.One * .1f;
         }
 

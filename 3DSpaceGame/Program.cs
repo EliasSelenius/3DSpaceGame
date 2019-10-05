@@ -16,6 +16,8 @@ namespace _3DSpaceGame {
         public static Scene scene;
         public static ShaderProgram StandardShader;
 
+        public static UI.Canvas canvas;
+
         public static float DeltaTime;
 
 
@@ -73,6 +75,8 @@ namespace _3DSpaceGame {
 
             //Draw.Initialize();
 
+
+            //==========Init test scene========
             scene = new Scene();
 
             var cam = scene.InitObject(new Camera());
@@ -102,10 +106,20 @@ namespace _3DSpaceGame {
             ship.transform.position = Vector3.UnitX * 10;
 
 
-            new Prefab(new Transform())
+            ship = new Prefab(new Transform())
                 .AddComp<MeshRenderer>(frogmesh, Material.Obsidian)
-                .NewInstance().EnterScene(scene);
+                .AddComp<PhysicsBody>()
+                .AddComp<SpaceDustParticles>()
+                .NewInstance();
+            ship.GetComp<PhysicsBody>().AddForce(5, 0, 5);
+            ship.EnterScene(scene);
 
+
+            // ======= init test ui======
+            canvas = new UI.Canvas();
+            canvas.InitElement<UI.ParentElement>();
+
+            //UI.Graphics.RenderRect();
 
             // test dir light
             StandardShader.SetVec3("dirLight.color", 1f, 1f, 1f);
@@ -135,10 +149,14 @@ namespace _3DSpaceGame {
 
             //Draw.Line(Vector3.Zero, Vector3.One);
 
+            GL.Enable(EnableCap.DepthTest);
             StandardShader.Use();
             Camera.MainCamera.UpdateCamUniforms(StandardShader);
             scene.Render();
 
+            // User interface
+            GL.Disable(EnableCap.DepthTest);
+            canvas.Render();
 
 
             GL.Flush();
