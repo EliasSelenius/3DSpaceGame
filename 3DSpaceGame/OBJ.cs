@@ -87,8 +87,7 @@ namespace _3DSpaceGame {
                     continue;
                 }
 
-                string p;
-                if (LineMatch(line, "v", out p)) {
+                if (LineMatch(line, "v", out string p)) {
                     // vertex position
 
                     if (ParseFloats(p, 3, out float[] o)) {

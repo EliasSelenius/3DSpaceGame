@@ -4,53 +4,74 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Text.RegularExpressions;
 
 using Glow;
+using JsonParser;
 
 using OpenTK.Graphics.OpenGL4;
 
 namespace _3DSpaceGame {
     public static class Assets {
 
-        public static readonly Dictionary<string, OBJ> OBJs = new Dictionary<string, OBJ>();
-        public static readonly Dictionary<string, ShaderProgram> Shaders = new Dictionary<string, ShaderProgram>();
-
-        public static void Load() {
-            LoadObjs();
-            //LoadShaders();
-
-            //LoadShader("data/shaders/debugdraw.glsl", "debugdraw.glsl");
-            LoadShader("data/shaders/userInterface.glsl", "userInterface.glsl");
-        }
-
         private static DirectoryInfo CurrentDir = new DirectoryInfo(Directory.GetCurrentDirectory());
         private static FileInfo[] GetFiles(string p) => CurrentDir.GetFiles(p, SearchOption.AllDirectories);
 
-        private static readonly Dictionary<string, ShaderType> shaderTypes = new Dictionary<string, ShaderType> {
-            {"SHADER_VERT", ShaderType.VertexShader },
-            {"SHADER_FRAG", ShaderType.FragmentShader }
-        };
+        public static readonly Dictionary<string, OBJ> OBJs = new Dictionary<string, OBJ>();
+        public static readonly Dictionary<string, ShaderProgram> Shaders = new Dictionary<string, ShaderProgram>();
+        public static readonly Dictionary<string, string> ShaderSourceFiles = new Dictionary<string, string>();
+        public static readonly Dictionary<string, Prefab> Prefabs = new Dictionary<string, Prefab>();
 
-        private static void LoadShaders() {
-            foreach (var item in GetFiles("*.glsl")) {
-                LoadShader(item.FullName, item.Name);
-            }
+        public static void Load() {
+            LoadObjs();
+
+            LoadShaderSources();
+            ProcessShaders();
+            CompileShadersFromConfig();
+
+            LoadPrefabs();
+
+            //LoadShader("data/shaders/debugdraw.glsl", "debugdraw.glsl");
+            //LoadShader("data/shaders/userInterface.glsl", "userInterface.glsl");
         }
 
-        private static void LoadShader(string filename, string name) {
-            var src = File.ReadAllText(filename);
-            var shaders = new List<Shader>();
-            foreach (var shtype in shaderTypes) {
-                var ssrc = src.Replace("ShaderType", shtype.Key);
-                //Console.WriteLine(ssrc);
-                shaders.Add(new Shader(shtype.Value, ssrc));
-            }
-            Shaders.Add(name, new ShaderProgram(shaders.ToArray()));
+        private static void LoadPrefabs() {
 
-            foreach (var shader in shaders) {
-                shader.Dispose();
-            }
         }
+
+        private static void CompileShadersFromConfig() {
+            var j = Json.FromFile("data/shaders/ShadersConfig.json") as JArray;
+            foreach (var item in j) {
+                var sc = item as JObject;
+                var fs = new Shader(ShaderType.FragmentShader, ShaderSourceFiles[sc["fragsrc"] as JString]);
+                var vs = new Shader(ShaderType.VertexShader, ShaderSourceFiles[sc["vertsrc"] as JString]);
+                Shaders.Add(sc["name"] as JString, new ShaderProgram(fs, vs));
+                fs.Dispose();
+                vs.Dispose();
+            }
+            Log("Finnished compiling shaders");
+        }
+
+        private static void LoadShaderSources() {
+            foreach (var item in GetFiles("data/shaders/*.glsl")) {
+                ShaderSourceFiles.Add(item.Name, File.ReadAllText(item.FullName));
+            }
+            Log("Finnished loading shader source code");
+        }
+
+        private static void ProcessShaders() {
+            var rgx = new Regex("#include +\"(?<filename>[a-zA-Z._]+)\"");
+            for (int i = 0; i < ShaderSourceFiles.Count; i++) {
+                var item = ShaderSourceFiles.ElementAt(i);
+                var m = rgx.Matches(item.Value);
+                for (int j = 0; j < m.Count; j++) {
+                    var match = m[j];
+                    ShaderSourceFiles[item.Key] = item.Value.Replace(match.Value, ShaderSourceFiles[match.Groups["filename"].Value]);
+                }
+            }
+            Log("Finnished processing shader source code");
+        }
+
 
         private static void LoadObjs() {
             foreach (var item in GetFiles("*.obj")) {

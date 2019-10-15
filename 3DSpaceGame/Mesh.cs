@@ -30,6 +30,18 @@ namespace _3DSpaceGame {
         public readonly List<Vertex> vertices;
         public readonly List<uint> indices;
 
+        public bool IsInitialized => vao != null;
+
+        public List<Tuple<uint, uint, uint>> Triangles {
+            get {
+                var res = new List<Tuple<uint, uint, uint>>();
+                for (int i = 0; i < indices.Count; i += 3) {
+                    res.Add(new Tuple<uint, uint, uint>(indices[i], indices[i + 1], indices[i + 2]));
+                }
+                return res;
+            }
+        }
+
         public Mesh() {
             vertices = new List<Vertex>();
             indices = new List<uint>();
@@ -43,6 +55,11 @@ namespace _3DSpaceGame {
 
         public void Init() {
 
+            if (IsInitialized) {
+                //throw new Exception("Mesh is already initialized");
+                Console.WriteLine("skipping Mesh init() because it was already initialized");
+                return;
+            }
 
             vao = new VertexArray();
 
@@ -62,9 +79,13 @@ namespace _3DSpaceGame {
 
         }
 
+        public void Apply() {
 
-        public void Render() {
-            vao.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, indices.Count, OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt);
+        }
+
+        public void Render() => Render(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles);
+        public void Render(OpenTK.Graphics.OpenGL4.PrimitiveType ptype) {
+            vao.DrawElements(ptype, indices.Count, OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt);
         }
 
         public void AddVertex(Vector3 p, Vector2 u, Vector3 n) => vertices.Add(new Vertex(p, u, n));
@@ -73,6 +94,17 @@ namespace _3DSpaceGame {
             indices.Add(a);
             indices.Add(b);
             indices.Add(c);
+        }
+
+
+        public Vector3 GenNormal(Tuple<uint, uint, uint> face) => GenNormal(face.Item1, face.Item2, face.Item3);
+        public Vector3 GenNormal(uint a, uint b, uint c) => GenNormal((int)a, (int)b, (int)c);
+        public Vector3 GenNormal(int a, int b, int c) => GenNormal(vertices[a], vertices[b], vertices[c]);
+
+        public Vector3 GenNormal(Vertex a, Vertex b, Vertex c) {
+            var dir1 = a.pos - c.pos;
+            var dir2 = b.pos - c.pos;
+            return Vector3.Cross(dir1, dir2);
         }
 
     }

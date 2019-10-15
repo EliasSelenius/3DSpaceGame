@@ -1,0 +1,12 @@
+﻿[
+  {
+    "name": "default",
+    "vertsrc": "defvert.glsl",
+    "fragsrc": "deffrag.glsl"
+  },
+  {
+    "name": "ui",
+    "vertsrc": "uivert.glsl",
+    "fragsrc": "uifrag.glsl"
+  }
+]

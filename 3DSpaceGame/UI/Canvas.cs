@@ -12,7 +12,7 @@ namespace _3DSpaceGame.UI {
         public static readonly ShaderProgram UIShader;
 
         static Canvas() {
-            UIShader = Assets.Shaders["userInterface.glsl"];
+            UIShader = Assets.Shaders["ui"];
         }
 
         private readonly List<Element> rootElements = new List<Element>();

@@ -12,10 +12,14 @@ namespace _3DSpaceGame {
         // nameing rule violation
 #pragma warning disable IDE1006
         public Scene scene { get; private set; }
+        public GameObject parent { get; private set; }
 #pragma warning restore IDE1006
+        private readonly List<GameObject> children = new List<GameObject>();
 
-        public GameObject parent;
         public readonly Transform transform = new Transform();
+
+        public bool IsParent => children.Count > 0;
+        public bool IsChild => parent == null;
 
         public Matrix4 ModelMatrix {
             get {
@@ -27,6 +31,19 @@ namespace _3DSpaceGame {
             }
         }
         
+        public void AddChild(GameObject obj) {
+            if (obj.scene != scene) {
+                obj.EnterScene(scene);
+            }
+            children.Add(obj);
+            obj.parent = this;
+        }
+
+        public void RemoveChild(GameObject obj) {
+            children.Remove(obj);
+            obj.parent = null;
+        }
+
 
         #region Components
 
@@ -60,6 +77,10 @@ namespace _3DSpaceGame {
         }
 
         public void EnterScene(Scene s) {
+            for (int i = 0; i < children.Count; i++) {
+                children[i].EnterScene(s);
+            }
+
             if (scene != null) {
                 LeaveScene();
             }
@@ -72,6 +93,9 @@ namespace _3DSpaceGame {
         }
 
         public void LeaveScene() {
+            for (int i = 0; i < children.Count; i++) {
+                children[i].LeaveScene();
+            }
             for (int i = 0; i < components.Count; i++) {
                 components[i].OnLeave();
             }

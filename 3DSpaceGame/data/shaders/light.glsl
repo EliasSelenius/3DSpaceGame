@@ -1,7 +1,4 @@
-﻿#version 440 core
-
-
-//======DATASTRUCTURES========
+﻿//======DATASTRUCTURES========
 
 struct PointLight {
 	vec3 pos;
@@ -26,33 +23,8 @@ struct Material {
 
 //=============================
 
-vec3 CalcDirLight(DirLight l, vec3 n, vec3 viewDir);
-vec3 CalcPointLight(PointLight l, vec3 n, vec3 fp, vec3 viewDir);
 
-uniform DirLight dirLight;
-//uniform PointLight pointLight;
-uniform vec3 cam_pos;
-
-uniform Material material;
-
-in vec2 uv;
-in vec3 normal;
-in vec3 fragPos;
-
-out vec4 out_color;
-
-void main() {
-	vec3 color = vec3(0.);
-	vec3 camdir = normalize(cam_pos - fragPos);
-
-	color += CalcDirLight(dirLight, normal, camdir);
-	//color += CalcPointLight(pointLight, normal, fragPos, camdir);
-
-	out_color = vec4(color, 1.);
-}
-
-
-vec3 CalcDirLight(DirLight l, vec3 n, vec3 viewDir) {
+vec3 CalcDirLight(DirLight l, vec3 n, vec3 viewDir, Material material) {
 	vec3 lightDir = normalize(-l.dir);
 	// diffuse
 	float diffscale = max(dot(n, lightDir), 0.);
@@ -68,7 +40,7 @@ vec3 CalcDirLight(DirLight l, vec3 n, vec3 viewDir) {
 }
 
 // note this only uses Phong and not blinn-phong
-vec3 CalcPointLight(PointLight l, vec3 n, vec3 fp, vec3 viewDir) {
+vec3 CalcPointLight(PointLight l, vec3 n, vec3 fp, vec3 viewDir, Material material) {
 	vec3 lightDir = normalize(l.pos - fp);
 	// diffuse
 	float diffscale = max(dot(n, lightDir), 0.);

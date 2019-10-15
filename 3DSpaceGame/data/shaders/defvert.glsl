@@ -16,7 +16,7 @@ out vec3 fragPos;
 
 void main() {
 	uv = v_uv;
-	normal = v_normal;
+	normal = normalize((obj_transform * vec4(v_normal, 0.0)).xyz);
 	fragPos = (obj_transform * vec4(v_pos, 0.)).xyz;
 	gl_Position = cam_projection * cam_view * obj_transform * vec4(v_pos, 1.0);
 }

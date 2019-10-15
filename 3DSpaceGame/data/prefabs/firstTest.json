@@ -1,0 +1,30 @@
+﻿{
+  "name": "myFirstPrefabTest",
+  "transform": {
+    "position": [ 0, 0, 0 ],
+    "scale": [ 2, 2, 2 ],
+    "rotation": [ 1, 0, 0, 0 ]
+  },
+  "components": [
+    {
+      "type": "_3DSpaceGame.PhysicsBody"
+    },
+    {
+      "type": "_3DSpaceGame.MeshRenderer",
+      "args": [ "@mesh(TheFrog.obj)", "@material(RedPlastic)" ]
+    }
+  ],
+  "children": [
+    {
+      "transform": {
+        "position": [ 0, -4, 0 ]
+      },
+      "components": [
+        {
+          "type": "_3DSpaceGame.MeshRenderer",
+          "args": [ "@mesh(TheFrog.obj)", "@material(RedPlastic)" ]
+        }
+      ]
+    }
+  ]
+}

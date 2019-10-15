@@ -5,9 +5,32 @@ using System.Text;
 using System.Threading.Tasks;
 
 using OpenTK;
+using JsonParser;
 
 namespace _3DSpaceGame {
     public class Transform {
+
+        public static Transform FromJson(JObject json) {
+            var res = new Transform();
+
+            if (json.ContainsKey("position")) {
+                var pos = json["position"] as JArray;
+                res.position = new Vector3(pos[0] as JNumber, pos[1] as JNumber, pos[2] as JNumber);
+            }
+
+            if (json.ContainsKey("scale")) {
+                var s = json["scale"] as JArray;
+                res.scale = new Vector3(s[0] as JNumber, s[1] as JNumber, s[2] as JNumber);
+            }
+
+            if (json.ContainsKey("rotation")) {
+                var r = json["rotation"] as JArray;
+                res.rotation = new Quaternion(r[0] as JNumber, r[1] as JNumber, r[2] as JNumber, r[3] as JNumber);
+            }
+
+            return res;
+        }
+
 
         // nameing rule violation
 #pragma warning disable IDE1006

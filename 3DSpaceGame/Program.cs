@@ -65,13 +65,16 @@ namespace _3DSpaceGame {
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
 
-            var f = new Shader(ShaderType.FragmentShader, System.IO.File.ReadAllText("data/shaders/frag.glsl"));
-            var v = new Shader(ShaderType.VertexShader, System.IO.File.ReadAllText("data/shaders/vert.glsl"));
-            StandardShader = new ShaderProgram(f, v);
-            f.Dispose();
-            v.Dispose();
-
             Assets.Load();
+
+            StandardShader = Assets.Shaders["default"];
+
+            //var f = new Shader(ShaderType.FragmentShader, Assets.ShaderSourceFiles["frag.glsl"]);
+            //var v = new Shader(ShaderType.VertexShader, Assets.ShaderSourceFiles["vert.glsl"]);
+            //StandardShader = new ShaderProgram(f, v);
+            //f.Dispose();
+            //v.Dispose();
+
 
             //Draw.Initialize();
 
@@ -93,10 +96,11 @@ namespace _3DSpaceGame {
                                     new PhysicsBody(),
                                     new SpaceDustParticles());
             frog.transform.position.Z = 10;
+            frog.AddChild(ship);
             //frog.transform.Rotate(Vector3.UnitY * MyMath.pi);
             //cam.parent = ship;
 
-            var station = scene.InitObject(new MeshRenderer(Assets.OBJs["ClockWork.obj"].GenMesh(), Material.CyanRubber));
+            var station = scene.InitObject(new MeshRenderer(Assets.OBJs["ClockWork.obj"].GenMesh(), Material.CyanRubber), new RotateComp(Vector3.UnitZ, .1f));
             station.transform.position.Z = -150;
             station.transform.scale *= 15;
 
@@ -106,14 +110,15 @@ namespace _3DSpaceGame {
             ship.transform.position = Vector3.UnitX * 10;
 
 
-            ship = new Prefab(new Transform())
-                .AddComp<MeshRenderer>(frogmesh, Material.Obsidian)
+            ship = new Prefab(new Transform(new Vector3(-10, 10, 10), Vector3.One * 4f))
+                .AddComp<MeshRenderer>(Shapes.GenIcosphere(), Material.RedPlastic, OpenTK.Graphics.OpenGL4.PrimitiveType.LineStrip)
                 .AddComp<PhysicsBody>()
                 .AddComp<SpaceDustParticles>()
                 .NewInstance();
             ship.GetComp<PhysicsBody>().AddForce(5, 0, 5);
             ship.EnterScene(scene);
 
+            Prefab.Load(JsonParser.Json.FromFile("data/prefabs/firstTest.json") as JsonParser.JObject).NewInstance().EnterScene(scene);
 
             // ======= init test ui======
             canvas = new UI.Canvas();

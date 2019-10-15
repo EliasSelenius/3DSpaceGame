@@ -36,6 +36,9 @@
     <Reference Include="Glow">
       <HintPath>..\..\Glow\Glow\bin\Debug\Glow.dll</HintPath>
     </Reference>
+    <Reference Include="JsonParser">
+      <HintPath>..\..\JsonParser\JsonParser\bin\Debug\JsonParser.dll</HintPath>
+    </Reference>
     <Reference Include="Nums">
       <HintPath>..\..\Nums\bin\Debug\Nums.dll</HintPath>
     </Reference>
@@ -55,6 +58,9 @@
     <Compile Include="Camera.cs" />
     <Compile Include="CamFlyController.cs" />
     <Compile Include="Assets.cs" />
+    <Compile Include="Shapes.cs" />
+    <Compile Include="Reflect.cs" />
+    <Compile Include="RotateComp.cs" />
     <Compile Include="UI\Canvas.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="Draw.cs" />
@@ -122,11 +128,13 @@
     <None Include="data\models\TheFrog.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="data\prefabs\firstTest.prefab" />
+    <None Include="data\prefabs\firstTest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="data\shaders\debugdraw.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="data\shaders\frag.glsl">
+    <None Include="data\shaders\deffrag.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="data\models\test.mtl">
@@ -135,11 +143,20 @@
     <None Include="data\models\test.obj">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="data\shaders\skybox.glsl" />
-    <None Include="data\shaders\userInterface.glsl">
+    <None Include="data\shaders\light.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="data\shaders\vert.glsl">
+    <None Include="data\shaders\ShadersConfig.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\shaders\skybox.glsl" />
+    <None Include="data\shaders\uifrag.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\shaders\uivert.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="data\shaders\defvert.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="OpenTK.dll.config" />

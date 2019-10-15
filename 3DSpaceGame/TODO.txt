@@ -48,6 +48,8 @@ TODO and PLANNING:
 		- DebugDrawing shader
 
 		- Shader preProcessor for abstraction and refactoring of glsl code
+			<Done> - support for #include directive
+			<Done> - deffine shaders in json file
 
 		- system for image effect shaders
 		- image effect shaders {
