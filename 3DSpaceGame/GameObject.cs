@@ -19,7 +19,8 @@ namespace _3DSpaceGame {
         public readonly Transform transform = new Transform();
 
         public bool IsParent => children.Count > 0;
-        public bool IsChild => parent == null;
+        public bool IsChild => parent != null;
+        public bool IsRoot => parent == null;
 
         public Matrix4 ModelMatrix {
             get {
