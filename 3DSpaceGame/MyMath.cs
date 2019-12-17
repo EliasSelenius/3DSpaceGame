@@ -12,7 +12,17 @@ namespace _3DSpaceGame {
         public const float pi = (float)Math.PI;
         public const float tau = 2 * pi;
 
+        public static Vector3 Sum(params Vector3[] vecs) => vecs.Aggregate((x, y) => x + y);
+
+        public static Vector3 AvgVec(params Vector3[] vecs) {
+            return Sum(vecs) / (float)vecs.Length;
+        }
+
+        public static bool InsideBounds(this Vector2 v, Vector2 a, Vector2 b) => InsideBounds(v.X, a.X, b.X) && InsideBounds(v.Y, a.Y, b.Y);
+        public static bool InsideBounds(float v, float a, float b) => (v < a) == (v > b);
+
         public static Vector3 Lerp(Vector3 a, Vector3 b, float t) => a + ((b - a) * t);
+        public static float Lerp(float a, float b, float t) => a + ((b - a) * t);
 
         public static float Sin(float x) => (float)Math.Sin(x);
         public static float Cos(float x) => (float)Math.Cos(x);
@@ -31,8 +41,8 @@ namespace _3DSpaceGame {
 
         public static float Clamp(float v, float min, float max) => v < min ? min : v > max ? max : v;
 
-        public static Nums.Vectors.Vec3 ToNumsVec(this Vector3 v) => new Nums.Vectors.Vec3(v.X, v.Y, v.Z);
-        public static Vector3 ToOpenTKVec(this Nums.Vectors.Vec3 v) => new Vector3(v.x, v.y, v.z);
+        public static Nums.vec3 ToNumsVec(this Vector3 v) => new Nums.vec3(v.X, v.Y, v.Z);
+        public static Vector3 ToOpenTKVec(this Nums.vec3 v) => new Vector3(v.x, v.y, v.z);
 
         public static string ToReadableStr(this float f) => f.ToString("###.###");
         public static string ToReadableStr(this Vector3 vec) => $"({vec.X.ToReadableStr()}, {vec.Y.ToReadableStr()}, {vec.Z.ToReadableStr()})";

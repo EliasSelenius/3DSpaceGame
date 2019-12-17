@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Drawing;
 
 using Glow;
 using JsonParser;
@@ -21,6 +22,7 @@ namespace _3DSpaceGame {
         public static readonly Dictionary<string, ShaderProgram> Shaders = new Dictionary<string, ShaderProgram>();
         public static readonly Dictionary<string, string> ShaderSourceFiles = new Dictionary<string, string>();
         public static readonly Dictionary<string, Prefab> Prefabs = new Dictionary<string, Prefab>();
+        public static readonly Dictionary<string, SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>> Images = new Dictionary<string, SixLabors.ImageSharp.Image<SixLabors.ImageSharp.PixelFormats.Rgba32>>();
 
         public static void Load() {
             LoadObjs();
@@ -29,10 +31,17 @@ namespace _3DSpaceGame {
             ProcessShaders();
             CompileShadersFromConfig();
 
+            LoadImages();
+
             LoadPrefabs();
 
-            //LoadShader("data/shaders/debugdraw.glsl", "debugdraw.glsl");
-            //LoadShader("data/shaders/userInterface.glsl", "userInterface.glsl");
+
+        }
+
+        private static void LoadImages() {
+            foreach (var item in GetFiles("data/textures/*.png")) {
+                Images.Add(item.Name, SixLabors.ImageSharp.Image.Load<SixLabors.ImageSharp.PixelFormats.Rgba32>(item.FullName));
+            }
         }
 
         private static void LoadPrefabs() {
@@ -43,8 +52,16 @@ namespace _3DSpaceGame {
             var j = Json.FromFile("data/shaders/ShadersConfig.json") as JArray;
             foreach (var item in j) {
                 var sc = item as JObject;
-                var fs = new Shader(ShaderType.FragmentShader, ShaderSourceFiles[sc["fragsrc"] as JString]);
-                var vs = new Shader(ShaderType.VertexShader, ShaderSourceFiles[sc["vertsrc"] as JString]);
+                
+                Shader fs, vs;
+                if (sc.ContainsKey("source")) {
+                    fs = new Shader(ShaderType.FragmentShader, ShaderSourceFiles[sc["source"] as JString].Replace("ShaderType", "SHADER_FRAG"));
+                    vs = new Shader(ShaderType.VertexShader, ShaderSourceFiles[sc["source"] as JString].Replace("ShaderType", "SHADER_VERT"));
+                } else {
+                    fs = new Shader(ShaderType.FragmentShader, ShaderSourceFiles[sc["fragsrc"] as JString]);
+                    vs = new Shader(ShaderType.VertexShader, ShaderSourceFiles[sc["vertsrc"] as JString]);
+                }
+                
                 Shaders.Add(sc["name"] as JString, new ShaderProgram(fs, vs));
                 fs.Dispose();
                 vs.Dispose();

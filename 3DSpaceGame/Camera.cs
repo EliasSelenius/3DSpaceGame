@@ -14,9 +14,9 @@ namespace _3DSpaceGame {
 
         public float FOV = 70;
 
-        public float NearPlane = 1;
+        public float NearPlane = .1f;
         public float FarPlane = 500;
-
+        
         public void SetToMain() {
             MainCamera = this;
         }

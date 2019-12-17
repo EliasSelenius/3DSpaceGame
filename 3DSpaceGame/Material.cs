@@ -9,12 +9,14 @@ using OpenTK;
 
 namespace _3DSpaceGame {
     public struct Material {
+        public Vector3 emission;
         public Vector3 ambient;
         public Vector3 diffuse;
         public Vector3 specular;
         public float shininess;
 
         public void Apply(ShaderProgram shader) {
+            shader.SetVec3("material.emission", emission);
             shader.SetVec3("material.ambient", ambient);
             shader.SetVec3("material.diffuse", diffuse);
             shader.SetVec3("material.specular", specular);
@@ -23,6 +25,16 @@ namespace _3DSpaceGame {
 
 
         #region Static materials
+
+
+        public static Material Default => new Material {
+            ambient = Vector3.One * .8f,
+            diffuse = Vector3.One * .9f,
+            specular = Vector3.One,
+            shininess = 1f
+        };
+
+
         public static Material Emerald => new Material {
             ambient = new Vector3(0.0215f, 0.1745f, 0.0215f),
             diffuse = new Vector3(0.07568f, 0.61424f, 0.07568f),

@@ -26,7 +26,7 @@ namespace _3DSpaceGame {
             if (json.ContainsKey("rotation")) {
                 var r = json["rotation"] as JArray;
                 res.rotation = new Quaternion(r[0] as JNumber, r[1] as JNumber, r[2] as JNumber, r[3] as JNumber);
-            }
+            } // todo: euler, axis angle support here
 
             return res;
         }

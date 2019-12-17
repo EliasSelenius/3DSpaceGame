@@ -15,6 +15,7 @@ struct DirLight {
 };
 
 struct Material {
+	vec3 emission;
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
@@ -36,7 +37,7 @@ vec3 CalcDirLight(DirLight l, vec3 n, vec3 viewDir, Material material) {
 	vec3 diffuse = l.color * (material.diffuse * diffscale);
 	vec3 specular = l.color * (material.specular * specscale);
 
-	return (ambient + diffuse + specular);
+	return (material.emission + ambient + diffuse + specular);
 }
 
 // note this only uses Phong and not blinn-phong

@@ -8,5 +8,14 @@
     "name": "ui",
     "vertsrc": "uivert.glsl",
     "fragsrc": "uifrag.glsl"
+  },
+  {
+    "name": "screenquad",
+    "vertsrc": "screenquad_vert.glsl",
+    "fragsrc": "screenquad_frag.glsl"
+  },
+  {
+    "name": "skybox",
+    "source": "skybox.glsl"
   }
 ]

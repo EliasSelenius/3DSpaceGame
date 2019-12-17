@@ -20,6 +20,8 @@ namespace _3DSpaceGame {
 
         public static float DeltaTime;
 
+        public static Graphics graphics;
+        public static Skybox skybox;
 
         static void Main(string[] args) {
 
@@ -35,45 +37,29 @@ namespace _3DSpaceGame {
 
             Window.WindowState = WindowState.Fullscreen;
 
-
-            //var o = OBJ.Load(new[] {
-            //    "v -0.5 -0.5 0",
-            //    "v -0.5 0.5 0",
-            //    "v 0.5 -0.5 0",
-            //    "v 0.5 0.5 0",
-            //    "vt 0 0",
-            //    "vt 0 1",
-            //    "vt 1 0",
-            //    "vt 1 1",
-            //    "f 1/3 2/1 3/4",
-            //    "f 4/2 3/4 2/1"
-            //});
-
-            /*
-                 -.5f, -.5f, 0f, 1, 0,
-                -.5f,  .5f, 0f, 0, 0,
-                .5f, -.5f, 0f, 1, 1,
-                .5f,  .5f, 0f, 0, 1
-             */
-
             Window.Run();
 
         }
 
         private static void Window_Load(object sender, EventArgs e) {
-            GL.ClearColor(0, 0, 0, 1);
+            GL.ClearColor(.8f, .8f, .8f, 1);
             GL.Enable(EnableCap.DepthTest);
+            GL.DepthFunc(DepthFunction.Lequal);
             GL.Enable(EnableCap.CullFace);
 
             Assets.Load();
 
             StandardShader = Assets.Shaders["default"];
+            graphics = new Graphics();
 
-            //var f = new Shader(ShaderType.FragmentShader, Assets.ShaderSourceFiles["frag.glsl"]);
-            //var v = new Shader(ShaderType.VertexShader, Assets.ShaderSourceFiles["vert.glsl"]);
-            //StandardShader = new ShaderProgram(f, v);
-            //f.Dispose();
-            //v.Dispose();
+            skybox = new Skybox(new[] {
+                Assets.Images["Skybox_left.png"],
+                Assets.Images["Skybox_right.png"],
+                Assets.Images["Skybox_up.png"],
+                Assets.Images["Skybox_down.png"],
+                Assets.Images["Skybox_front.png"],
+                Assets.Images["Skybox_back.png"]
+            });
 
 
             //Draw.Initialize();
@@ -94,37 +80,45 @@ namespace _3DSpaceGame {
             var frog = scene.InitObject(new MeshRenderer(frogmesh, Material.Silver),
                                     new PlayerShipController(),
                                     new PhysicsBody(),
-                                    new SpaceDustParticles());
+                                    new Particles.EngineFlames(-Vector3.UnitZ * 2.1f, .3f),
+                                    new Particles.SpaceDustParticles());
             frog.transform.position.Z = 10;
-            frog.AddChild(ship);
+            //frog.AddChild(ship);
             //frog.transform.Rotate(Vector3.UnitY * MyMath.pi);
             //cam.parent = ship;
 
-            var station = scene.InitObject(new MeshRenderer(Assets.OBJs["ClockWork.obj"].GenMesh(), Material.CyanRubber), new RotateComp(Vector3.UnitZ, .1f));
+            var stationmesh = Assets.OBJs["ClockWork.obj"].GenMesh();
+            //stationmesh.FlipIndices();
+            var station = scene.InitObject(new MeshRenderer(stationmesh, Material.CyanRubber), new RotateComp(Vector3.UnitZ, .1f));
             station.transform.position.Z = -150;
             station.transform.scale *= 15;
+            //station.GetComp<MeshRenderer>().mesh.FlipIndices();
 
-            ship = scene.InitObject(new MeshRenderer(Assets.OBJs["spaceCraft.obj"].GenMesh(), Material.Bronze));
+            ship = scene.InitObject(new MeshRenderer(Assets.OBJs["spaceCraft.obj"].GenMesh(), Material.Bronze), new PhysicsBody());
             ship.transform.position = Vector3.One * 20;
-            ship = scene.InitObject(new MeshRenderer(Assets.OBJs["SpaceShip.obj"].GenMesh(), Material.Chrome));
+            ship = scene.InitObject(new MeshRenderer(Assets.OBJs["SpaceShip.obj"].GenMesh(), Material.Chrome), new PhysicsBody());
             ship.transform.position = Vector3.UnitX * 10;
 
 
-            ship = new Prefab(new Transform(new Vector3(-10, 10, 10), Vector3.One * 4f))
-                .AddComp<MeshRenderer>(Shapes.GenIcosphere(), Material.RedPlastic, OpenTK.Graphics.OpenGL4.PrimitiveType.LineStrip)
-                .AddComp<PhysicsBody>()
-                .AddComp<SpaceDustParticles>()
-                .NewInstance();
-            ship.GetComp<PhysicsBody>().AddForce(5, 0, 5);
-            ship.EnterScene(scene);
+            var icospherePrefab = new Prefab(new Transform(new Vector3(-10, 10, 10), Vector3.One * 4f))
+                .AddComp<MeshRenderer>(Shapes.GenIcosphere(), Material.Jade, OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles);
+
+            int i = 0;
+            foreach (var item in typeof(Material).GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)) {
+                var index = icospherePrefab.NewInstance();
+                index.GetComp<MeshRenderer>().material = (item.GetValue(null) as Material? ?? new Material());
+                index.transform.position -= Vector3.UnitX * 8f * i;
+                index.EnterScene(scene);
+                i++;
+            } 
 
             Prefab.Load(JsonParser.Json.FromFile("data/prefabs/firstTest.json") as JsonParser.JObject).NewInstance().EnterScene(scene);
 
+
             // ======= init test ui======
             canvas = new UI.Canvas();
-            canvas.InitElement<UI.ParentElement>();
-
-            //UI.Graphics.RenderRect();
+            //var el = canvas.InitElement<UI.Element>();
+            //el.Setsize(.4f).Setpos(-.5f);
 
             // test dir light
             StandardShader.SetVec3("dirLight.color", 1f, 1f, 1f);
@@ -145,24 +139,33 @@ namespace _3DSpaceGame {
         private static void Window_UpdateFrame(object sender, FrameEventArgs e) {
             DeltaTime = (float)e.Time;
             scene.Update();
+            canvas.Update();
             Input.Update();
         }
 
 
         private static void Window_RenderFrame(object sender, FrameEventArgs e) {
+
+            graphics.Bind();
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            //Draw.Line(Vector3.Zero, Vector3.One);
-
+            // scene
             GL.Enable(EnableCap.DepthTest);
             StandardShader.Use();
             Camera.MainCamera.UpdateCamUniforms(StandardShader);
             scene.Render();
+            
+            // skybox
+            skybox.Render();
 
             // User interface
             GL.Disable(EnableCap.DepthTest);
             canvas.Render();
 
+
+            // draw screen quad
+            Graphics.BindDefault();
+            graphics.Render();
 
             GL.Flush();
             Window.SwapBuffers();

@@ -21,6 +21,11 @@ namespace _3DSpaceGame {
         public static float Rangef(float min, float max) => min + (float)random.NextDouble() * (max - min);
 
         public static Vector3 Vec3(float mag) => UnitVec3() * Rangef(mag);
+        public static Vector3 Vec3(float minmag, float maxmag) => UnitVec3() * Rangef(minmag, maxmag);
+
+        public static Glow.Color32bit RgbColor() => new Glow.Color32bit(Nextf(), Nextf(), Nextf(), 1f);
+        public static Glow.Color32bit RgbaColor() => new Glow.Color32bit(Nextf(), Nextf(), Nextf(), Nextf());
+        
 
         public static Vector3 UnitVec3() {
             return new Vector3 {

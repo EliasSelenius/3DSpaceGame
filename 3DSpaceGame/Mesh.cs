@@ -32,7 +32,7 @@ namespace _3DSpaceGame {
 
         public bool IsInitialized => vao != null;
 
-        public List<Tuple<uint, uint, uint>> Triangles {
+        public List<Tuple<uint, uint, uint>> TriangleIndices {
             get {
                 var res = new List<Tuple<uint, uint, uint>>();
                 for (int i = 0; i < indices.Count; i += 3) {
@@ -41,6 +41,7 @@ namespace _3DSpaceGame {
                 return res;
             }
         }
+
 
         public Mesh() {
             vertices = new List<Vertex>();
@@ -88,6 +89,10 @@ namespace _3DSpaceGame {
             vao.DrawElements(ptype, indices.Count, OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt);
         }
 
+        public void RenderNormals() {
+            // TODO: implement
+        }
+
         public void AddVertex(Vector3 p, Vector2 u, Vector3 n) => vertices.Add(new Vertex(p, u, n));
 
         public void AddTriangle(uint a, uint b, uint c) {
@@ -101,10 +106,30 @@ namespace _3DSpaceGame {
         public Vector3 GenNormal(uint a, uint b, uint c) => GenNormal((int)a, (int)b, (int)c);
         public Vector3 GenNormal(int a, int b, int c) => GenNormal(vertices[a], vertices[b], vertices[c]);
 
-        public Vector3 GenNormal(Vertex a, Vertex b, Vertex c) {
+        public static Vector3 GenNormal(Vertex a, Vertex b, Vertex c) {
             var dir1 = a.pos - c.pos;
             var dir2 = b.pos - c.pos;
             return Vector3.Cross(dir1, dir2);
+        }
+
+        public void FlipIndices() {
+            for (int i = 0; i < indices.Count; i += 3) {
+                var t = indices[i];
+                indices[i] = indices[i + 2];
+                indices[i + 2] = t;
+            }
+        }
+
+        public void GenNormals() {
+            for (int i = 0; i < vertices.Count; i++) {
+                var verts = from o in TriangleIndices
+                            where o.Item1 == i || o.Item2 == i || o.Item3 == i
+                            select (vertices[(int)o.Item1].pos + vertices[(int)o.Item2].pos + vertices[(int)o.Item3].pos) - vertices[i].pos;
+
+                var vert = vertices[i];
+                vert.normal = (vertices[i].pos - MyMath.AvgVec(verts.ToArray())).Normalized();
+                vertices[i] = vert;
+            }
         }
 
     }

@@ -48,9 +48,7 @@ namespace _3DSpaceGame.UI {
         }
 
         public static void RenderRect() {
-
             vao.DrawElements(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles, 6, OpenTK.Graphics.OpenGL4.DrawElementsType.UnsignedInt);
-
         }
 
     }

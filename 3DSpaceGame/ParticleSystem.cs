@@ -12,6 +12,7 @@ namespace _3DSpaceGame {
         public readonly Transform transform = new Transform();
         public float time = 0;
         public Vector3 velocity;
+        public Vector3 rotationalVelocity;
         public bool enabled = false;
 
         
@@ -39,6 +40,8 @@ namespace _3DSpaceGame {
                                                            select o;
 
         protected bool LocalCoords;
+
+        public Material material = Material.Default;
 
         protected int ParticleCount {
             get => particles.Count;
@@ -71,6 +74,7 @@ namespace _3DSpaceGame {
 
                     p.time += Program.DeltaTime;
                     p.transform.Translate(p.velocity * Program.DeltaTime);
+                    p.transform.Rotate(p.rotationalVelocity * Program.DeltaTime);
 
                     UpdateParticle(p);
 
@@ -90,7 +94,7 @@ namespace _3DSpaceGame {
             }
         }
 
-        private void Spawn() {
+        public void Spawn() {
             if (DisabledParticles.Count() > 0) {
                 var p = DisabledParticles.ElementAt(0);
                 p.enabled = true;
@@ -99,7 +103,7 @@ namespace _3DSpaceGame {
         }
 
         public override void Render() {
-            Material.WhitePlastic.Apply(Program.StandardShader);
+            material.Apply(Program.StandardShader);
             for (int i = 0; i < particles.Count; i++) {
                 var p = particles[i];
                 if (!p.enabled) {

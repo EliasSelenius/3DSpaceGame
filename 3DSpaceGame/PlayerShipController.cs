@@ -18,6 +18,8 @@ namespace _3DSpaceGame {
         }
 
         private Quaternion camrot = Quaternion.Identity;
+        private float defFov = 70;
+        private float zoom = 1;
 
         public override void Update() {
 
@@ -25,9 +27,11 @@ namespace _3DSpaceGame {
 
             // Camera controlls:
 
+            zoom = MyMath.Clamp(zoom + Input.MouseWheelDelta / 3f, 1, 100);
+
             camrot = camrot.Rotate(new Vector3(Input.MouseDelta.Y / 100f, -Input.MouseDelta.X / 100f, 0));
 
-            Camera.MainCamera.transform.position = transform.position + camrot.CalcForward() * -10;
+            Camera.MainCamera.transform.position = transform.position + camrot.CalcForward() * -10 * zoom;
             Camera.MainCamera.transform.LookAt(transform.position, camrot.CalcUp());
             
             if (!Input.IsKeyDown(OpenTK.Input.Key.AltLeft)) {
@@ -35,11 +39,15 @@ namespace _3DSpaceGame {
             }
 
 
+
             // Ship movment controlls
+            var fovTarget = defFov;
             float speed = .5f;
             if (Input.IsKeyDown(OpenTK.Input.Key.LShift)) {
-                speed *= 2f;
+                fovTarget = 90;
+                speed *= 2.3f;
             }
+            Camera.MainCamera.FOV = MyMath.Lerp(Camera.MainCamera.FOV, fovTarget, .1f);
             var i = Input.Wasd * speed;
             var f = transform.forward * i.Y;
             f += transform.left * i.X * .5f;
