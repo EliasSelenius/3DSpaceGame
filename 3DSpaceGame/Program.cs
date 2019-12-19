@@ -64,7 +64,6 @@ namespace _3DSpaceGame {
 
             //Draw.Initialize();
 
-
             //==========Init test scene========
             scene = new Scene();
 

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using JsonParser;
+using Nums;
 
 namespace _3DSpaceGame {
     public class Prefab {
@@ -44,6 +45,8 @@ namespace _3DSpaceGame {
                                     str = str.Substring(1);
                                     resarg = PreProcessingDirective(str);
                                 }
+                            } else if (arg.IsArray) {
+
                             }
                             args.Add(resarg);
                         }
@@ -61,6 +64,46 @@ namespace _3DSpaceGame {
             }
 
             return res;
+        }
+
+        private static (Type, object[]) parseComponent(JObject jobj) {
+
+            if (jobj.ContainsKey("args")) {
+                var jargs = jobj["args"] as JArray;
+                var args = new List<object>();
+                foreach (var jarg in jargs) {
+                    if (jarg.IsArray) {
+                        if (toVec2(jarg as JArray, out vec2 v2))
+                            args.Add(v2);
+                        else if (toVec3(jarg as JArray, out vec3 v3))
+                            args.Add(v3);
+                        else
+                            args.Add(jarg.ToObject());
+
+                    } else {
+                        args.Add(jarg.ToObject());
+                    }
+                }
+            }
+
+            return (Type.GetType(jobj["type"] as JString), null);
+        }
+
+        private static bool toVec2(JArray a, out Nums.vec2 v) {
+            if (a.Count == 2) {
+                v = new Nums.vec2(a[0] as JNumber, a[1] as JNumber);
+                return true;
+            }
+            v = vec2.zero;
+            return false;
+        }
+        private static bool toVec3(JArray a, out vec3 v) {
+            if (a.Count == 3) {
+                v = new vec3(a[0] as JNumber, a[1] as JNumber, a[2] as JNumber);
+                return true;
+            }
+            v = vec3.zero;
+            return false;
         }
 
         private static object PreProcessingDirective(string str) {

@@ -15,16 +15,15 @@ namespace _3DSpaceGame.UI {
             UIShader = Assets.Shaders["ui"];
         }
 
-        private readonly List<Element> rootElements = new List<Element>();
+        public readonly List<Element> rootElements = new List<Element>();
 
         public int PixelWidth => Program.Window.Width;
         public int PixelHeight => Program.Window.Height;
 
-        public T InitElement<T>() where T : Element, new() {
-            var elm = new T();
-            rootElements.Add(elm);
-            elm.Init(this);
-            return elm;
+        public Element CreateElement<T>() where T : Element, new() {
+            var e = Element.CreateElement<T>(this);
+            rootElements.Add(e);
+            return e;
         }
 
         public void Render() {

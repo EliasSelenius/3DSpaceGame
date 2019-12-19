@@ -12,46 +12,54 @@ namespace _3DSpaceGame.UI {
         public Canvas Canvas { get; private set; }
         public Element Parent { get; private set; }
         public readonly List<Element> children = new List<Element>();
-
-        public readonly RectTransform rectTransform = new RectTransform();
-
-        public Glow.Color32bit background_color = new Glow.Color32bit(1f);
-        
-        public OpenTK.Vector2 size, pos;
-
-        public float width {
-            get => size.X;
-            set => size.X = value;
-        }
-        public float height { 
-            get => size.Y;
-            set => size.Y = value;
-        }
-
         public bool IsLeafNode => children.Count == 0;
         public bool IsRootNode => Parent == null;
         public bool HasParent => Parent != null;
 
+
+        public vec2 size, pos;
+        public float width {
+            get => size.x;
+            set => size.x = value;
+        }
+        public float height { 
+            get => size.y;
+            set => size.y = value;
+        }
+
+
+        public Glow.Color32bit background_color = new Glow.Color32bit(1f);        
         public bool Visible = true;
         public bool Active = true;
 
-        public Element Hide(bool h) {
-            Visible = Active = !h;
-            return this;
+        private Element() { }
+        
+        private void Initialize(Element parent) {
+            Canvas = parent.Canvas;
+            Parent = parent;
         }
 
-        internal void Init(Canvas c) => Canvas = c;
-        private void Init(Element e) {
-            Parent = e; Init(e.Canvas);
+        internal static Element CreateElement<T>(Canvas c) where T : Element, new() {
+            var e = new T();
+            e.Canvas = c;
+            return e;
         }
-        
+
         protected virtual void ConnectedToParent() { }
         protected virtual void OnHover() { }
-        protected virtual void OnClick() {
-            background_color = Random.RgbColor();
-        }
-        //protected virtual void Draw() { }
+        protected virtual void OnClick() { }
 
+
+
+        public T AddChild<T>() where T : Element, new() {
+            T elm = new T();
+            children.Add(elm);
+            elm.Initialize(this);
+
+            elm.ConnectedToParent();
+
+            return elm;
+        }
 
         private void ApplyUniforms() {
 
@@ -64,7 +72,7 @@ namespace _3DSpaceGame.UI {
             }*/
 
 
-            Canvas.UIShader.SetVec4("rectTransform", pos.X, pos.Y, width, height);
+            Canvas.UIShader.SetVec4("rectTransform", pos.x, pos.y, width, height);
             Canvas.UIShader.SetVec4("background_color", background_color.Red, background_color.Green, background_color.Blue, background_color.Alpha);
         }
 
@@ -82,7 +90,7 @@ namespace _3DSpaceGame.UI {
 
         public void UpdateEvents() {
 
-            if (!Active) return;
+            if (!Active && !Visible) return;
 
             var mp = Input.MousePos_ndc;
             var hs = size * .5f;
@@ -98,7 +106,7 @@ namespace _3DSpaceGame.UI {
         }
 
         public Element Setpos(float x, float y) {
-            pos = new OpenTK.Vector2(x, y);
+            pos = (x, y);
             return this;
         }
         public Element Setpos(float xy) => Setpos(xy, xy);
@@ -110,15 +118,7 @@ namespace _3DSpaceGame.UI {
 
         public Element Setsize(float wh) => Setsize(wh, wh);
 
-        public T AddChild<T>() where T : Element, new() {
-            T elm = new T();
-            children.Add(elm);
-            elm.Init(this);
-
-            elm.ConnectedToParent();
-
-            return elm;
-        }
+        
 
     }
 }

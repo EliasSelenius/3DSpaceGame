@@ -29,7 +29,7 @@ namespace _3DSpaceGame {
 
             zoom = MyMath.Clamp(zoom + Input.MouseWheelDelta / 3f, 1, 100);
 
-            camrot = camrot.Rotate(new Vector3(Input.MouseDelta.Y / 100f, -Input.MouseDelta.X / 100f, 0));
+            camrot = camrot.Rotate(new Vector3(Input.MouseDelta.y / 100f, -Input.MouseDelta.x / 100f, 0));
 
             Camera.MainCamera.transform.position = transform.position + camrot.CalcForward() * -10 * zoom;
             Camera.MainCamera.transform.LookAt(transform.position, camrot.CalcUp());
@@ -49,8 +49,8 @@ namespace _3DSpaceGame {
             }
             Camera.MainCamera.FOV = MyMath.Lerp(Camera.MainCamera.FOV, fovTarget, .1f);
             var i = Input.Wasd * speed;
-            var f = transform.forward * i.Y;
-            f += transform.left * i.X * .5f;
+            var f = transform.forward * i.y;
+            f += transform.left * i.x * .5f;
             p.AddForce(f);
 
         }

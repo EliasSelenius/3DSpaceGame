@@ -7,22 +7,25 @@ using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Input;
 
+using Nums;
+
 namespace _3DSpaceGame {
     static class Input {
 
-        public static Vector2 Wasd => new Vector2(KeyAxis(Key.D, Key.A), KeyAxis(Key.W, Key.S));
+        public static vec2 Wasd => new vec2(KeyAxis(Key.D, Key.A), KeyAxis(Key.W, Key.S));
 
-        public static Vector2 MouseDelta => MousePos - (IsFixedMouse ? screenCenter : PrevMousePos);
-        public static Vector2 MousePos { get; private set; }
-        public static Vector2 MousePos_ndc {
+        public static vec2 MouseDelta => MousePos - (IsFixedMouse ? screenCenter : PrevMousePos);
+        public static vec2 MousePos { get; private set; }
+        public static vec2 MousePos_ndc {
             get {
-                var p = new Vector2(MousePos.X / Program.Window.Width, MousePos.Y / Program.Window.Height) * 2f - Vector2.One;
-                p.Y = -p.Y;
+                var p = new vec2(MousePos.x / Program.Window.Width, MousePos.y / Program.Window.Height) * 2f - vec2.one;
+                p.y = -p.y;
                 return p;
             }
         }
 
-        public static Vector2 PrevMousePos { get; private set; }
+
+        public static vec2 PrevMousePos { get; private set; }
 
         public static float MouseWheelDelta { get; private set; }
 
@@ -32,7 +35,7 @@ namespace _3DSpaceGame {
         public static bool IsFixedMouse => fixedmouse && Program.Window.Focused;
         private static bool fixedmouse;
 
-        private static Vector2 screenCenter => new Vector2(Program.Window.X + (Program.Window.Width / 2f), Program.Window.Y + (Program.Window.Height / 2f));
+        private static vec2 screenCenter => new vec2(Program.Window.X + (Program.Window.Width / 2f), Program.Window.Y + (Program.Window.Height / 2f));
 
         public static bool LeftMousePressed { get; private set; }
         public static bool RightMousePressed { get; private set; }
@@ -89,7 +92,7 @@ namespace _3DSpaceGame {
         }
 
         private static void Window_MouseMove(object sender, MouseMoveEventArgs e) {
-            MousePos = new Vector2(e.X, e.Y);
+            MousePos = new vec2(e.X, e.Y);
             
         }
 
@@ -105,7 +108,7 @@ namespace _3DSpaceGame {
 
             if (IsFixedMouse) {
                 var c = screenCenter;
-                Mouse.SetPosition(c.X, c.Y);
+                Mouse.SetPosition(c.x, c.y);
             }
         }
 

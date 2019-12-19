@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using OpenTK;
 
+using Nums;
+
 namespace _3DSpaceGame {
     public static class MyMath {
 
@@ -18,8 +20,11 @@ namespace _3DSpaceGame {
             return Sum(vecs) / (float)vecs.Length;
         }
 
+        public static bool InsideBounds(this vec2 v, vec2 a, vec2 b) => InsideBounds(v.x, a.x, b.x) && InsideBounds(v.y, a.y, b.y);
         public static bool InsideBounds(this Vector2 v, Vector2 a, Vector2 b) => InsideBounds(v.X, a.X, b.X) && InsideBounds(v.Y, a.Y, b.Y);
         public static bool InsideBounds(float v, float a, float b) => (v < a) == (v > b);
+
+
 
         public static Vector3 Lerp(Vector3 a, Vector3 b, float t) => a + ((b - a) * t);
         public static float Lerp(float a, float b, float t) => a + ((b - a) * t);
