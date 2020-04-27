@@ -9,7 +9,7 @@ using OpenTK;
 namespace _3DSpaceGame {
 
     public class Scene {
-        private readonly List<GameObject> gameObjects = new List<GameObject>();
+        internal readonly List<GameObject> gameObjects = new List<GameObject>();
 
         internal void _RemoveObject(GameObject o) {
             gameObjects.Remove(o);
@@ -30,6 +30,11 @@ namespace _3DSpaceGame {
             return g;
         }
 
+        public void CheckCollisions() {
+            for (int i = 0; i < gameObjects.Count; i++)
+                gameObjects[i].processColliders(i);
+        }
+
         public void Update() {
             for (int i = 0; i < gameObjects.Count; i++) {
                 gameObjects[i].EarlyUpdate();
@@ -40,9 +45,9 @@ namespace _3DSpaceGame {
         }
 
         public void Render() {
-            foreach (var item in gameObjects) {
-                item.Render();
-            }
+            for (int i = 0; i < gameObjects.Count; i++)
+                gameObjects[i].Render();
+            
         }
 
     }

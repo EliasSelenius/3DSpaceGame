@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 using Glow;
+using Nums;
+
 using OpenTK;
 using OpenTK.Graphics.OpenGL4;
+
+using _3DSpaceGame.Physics;
 
 namespace _3DSpaceGame {
     class Program {
@@ -23,6 +28,8 @@ namespace _3DSpaceGame {
         public static Graphics graphics;
         public static Skybox skybox;
 
+        private static Thread collisionDetectionThread;
+
         static void Main(string[] args) {
 
             Window = new GameWindow(1600, 900);
@@ -37,7 +44,76 @@ namespace _3DSpaceGame {
 
             Window.WindowState = WindowState.Fullscreen;
 
+
             Window.Run();
+
+        }
+
+        private static void InitTestScene() {
+
+            scene = new Scene();
+
+            var cam = scene.InitObject(new Camera());
+            cam.transform.position.z += 3;
+
+            var ship = scene.InitObject(new MeshRenderer(Assets.OBJs["StarterShip.obj"].GenMesh(), Material.Brass),
+                             new PhysicsBody());
+            ship.GetComp<PhysicsBody>().AddForce(0, 10, -10);
+            ship.transform.Rotate(new vec3(3.14f / 4f, 3.14f / 4f, 3.14f / 4f));
+
+            var frogmesh = Meshes.GetMesh("TheFrog");
+            var frog = scene.InitObject(new MeshRenderer(frogmesh, Material.Silver),
+                                    new PlayerShipController(),
+                                    new PhysicsBody(),
+                                    new Particles.EngineFlames(-Vector3.UnitZ * 2.1f, .3f),
+                                    new Particles.SpaceDustParticles(),
+                                    new SphereCollider(2d) { offset = (0, 0, 3) },
+                                    new SphereCollider(2d) { offset = (0, 0, -1) });
+            frog.transform.position.z = 10;
+
+
+            var stationmesh = Assets.OBJs["ClockWork.obj"].GenMesh();
+            //stationmesh.FlipIndices();
+            var station = scene.InitObject(new MeshRenderer(stationmesh, Material.CyanRubber), new RotateComp(vec3.unitz, .1f));
+            station.transform.position.z = -150;
+            station.transform.scale *= 15;
+            //station.GetComp<MeshRenderer>().mesh.FlipIndices();
+
+            ship = scene.InitObject(new MeshRenderer(Assets.OBJs["spaceCraft.obj"].GenMesh(), Material.Bronze), new PhysicsBody());
+            ship.transform.position = vec3.one * 20;
+            ship = scene.InitObject(new MeshRenderer(Assets.OBJs["SpaceShip.obj"].GenMesh(), Material.Chrome), new PhysicsBody());
+            ship.transform.position = vec3.unitx * 10;
+
+
+            var icospherePrefab = new Prefab(new Transform(new vec3(-10, 10, 10), vec3.one * 4f))
+                .AddComp<MeshRenderer>(Shapes.GenIcosphere(), Material.Jade, OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles)
+                .AddComp<SphereCollider>(4d)
+                .AddComp<PhysicsBody>();
+
+            int i = 0;
+            foreach (var item in typeof(Material).GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)) {
+                var index = icospherePrefab.NewInstance();
+                index.GetComp<MeshRenderer>().material = (item.GetValue(null) as Material? ?? new Material());
+                index.transform.position -= vec3.unitx * 8f * i;
+                index.EnterScene(scene);
+                i++;
+            }
+
+            var icosphere = icospherePrefab.NewInstance();
+            icosphere.AddComp(new IcoSphereSubdivisonTestComp());
+            icosphere.transform.position = (40, 40, 50);
+            icosphere.EnterScene(scene);
+
+
+
+            Assets.Prefabs["sun"].NewInstance().EnterScene(scene);
+
+
+
+            // ======= init test ui======
+            canvas = new UI.Canvas();
+            //var el = canvas.InitElement<UI.Element>();
+            //el.Setsize(.4f).Setpos(-.5f);
 
         }
 
@@ -46,6 +122,15 @@ namespace _3DSpaceGame {
             GL.Enable(EnableCap.DepthTest);
             GL.DepthFunc(DepthFunction.Lequal);
             GL.Enable(EnableCap.CullFace);
+
+            // Init a generic sphere mesh
+            var sphere = Shapes.GenIcosphere();
+            sphere.Subdivide(2);
+            sphere.Mutate(v => {
+                v.pos = v.pos.normalized;
+                return v;
+            });
+            Meshes.AddMesh("sphere", sphere);
 
             Assets.Load();
 
@@ -62,66 +147,13 @@ namespace _3DSpaceGame {
             });
 
 
-            //Draw.Initialize();
 
-            //==========Init test scene========
-            scene = new Scene();
-
-            var cam = scene.InitObject(new Camera());
-            cam.transform.position.Z += 3;
-
-            var ship = scene.InitObject(new MeshRenderer(Assets.OBJs["StarterShip.obj"].GenMesh(), Material.Brass),
-                             new PhysicsBody());
-            ship.GetComp<PhysicsBody>().AddForce(0, 10, -10);
-            ship.transform.Rotate(new Vector3(3.14f / 4f, 3.14f / 4f, 3.14f / 4f));
-
-            var frogmesh = Assets.OBJs["TheFrog.obj"].GenMesh();
-            var frog = scene.InitObject(new MeshRenderer(frogmesh, Material.Silver),
-                                    new PlayerShipController(),
-                                    new PhysicsBody(),
-                                    new Particles.EngineFlames(-Vector3.UnitZ * 2.1f, .3f),
-                                    new Particles.SpaceDustParticles());
-            frog.transform.position.Z = 10;
-            //frog.AddChild(ship);
-            //frog.transform.Rotate(Vector3.UnitY * MyMath.pi);
-            //cam.parent = ship;
-
-            var stationmesh = Assets.OBJs["ClockWork.obj"].GenMesh();
-            //stationmesh.FlipIndices();
-            var station = scene.InitObject(new MeshRenderer(stationmesh, Material.CyanRubber), new RotateComp(Vector3.UnitZ, .1f));
-            station.transform.position.Z = -150;
-            station.transform.scale *= 15;
-            //station.GetComp<MeshRenderer>().mesh.FlipIndices();
-
-            ship = scene.InitObject(new MeshRenderer(Assets.OBJs["spaceCraft.obj"].GenMesh(), Material.Bronze), new PhysicsBody());
-            ship.transform.position = Vector3.One * 20;
-            ship = scene.InitObject(new MeshRenderer(Assets.OBJs["SpaceShip.obj"].GenMesh(), Material.Chrome), new PhysicsBody());
-            ship.transform.position = Vector3.UnitX * 10;
-
-
-            var icospherePrefab = new Prefab(new Transform(new Vector3(-10, 10, 10), Vector3.One * 4f))
-                .AddComp<MeshRenderer>(Shapes.GenIcosphere(), Material.Jade, OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles);
-
-            int i = 0;
-            foreach (var item in typeof(Material).GetProperties(System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public)) {
-                var index = icospherePrefab.NewInstance();
-                index.GetComp<MeshRenderer>().material = (item.GetValue(null) as Material? ?? new Material());
-                index.transform.position -= Vector3.UnitX * 8f * i;
-                index.EnterScene(scene);
-                i++;
-            } 
-
-            Prefab.Load(JsonParser.Json.FromFile("data/prefabs/firstTest.json") as JsonParser.JObject).NewInstance().EnterScene(scene);
-
-
-            // ======= init test ui======
-            canvas = new UI.Canvas();
-            //var el = canvas.InitElement<UI.Element>();
-            //el.Setsize(.4f).Setpos(-.5f);
+            InitTestScene();
+            
 
             // test dir light
             StandardShader.SetVec3("dirLight.color", 1f, 1f, 1f);
-            StandardShader.SetVec3("dirLight.dir", -Vector3.One);
+            StandardShader.SetVec3("dirLight.dir", -vec3.one);
 
             Console.WriteLine(GLObject.ListInstances());
 
@@ -131,8 +163,27 @@ namespace _3DSpaceGame {
             }
 
             // test point light
-            //ActiveShader.SetVec3("pointLight.pos", Vector3.UnitX);
+            //ActiveShader.SetVec3("pointLight.pos", vec3.unitx);
             //ActiveShader.SetVec3("pointLight.color", 1, 1, 1);
+
+
+            // init collision detection thread
+            collisionDetectionThread = new Thread(collisionDetectionThreadStart) {
+                IsBackground = true
+            };
+            collisionDetectionThread.Start();
+
+
+            JsConsole.Start();
+
+        }
+
+
+        private static void collisionDetectionThreadStart() {
+            while (true) {
+                //Console.WriteLine("col loop");
+                scene.CheckCollisions();
+            }
         }
 
         private static void Window_UpdateFrame(object sender, FrameEventArgs e) {

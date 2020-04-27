@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using OpenTK;
 using JsonParser;
+using Nums;
 
 namespace _3DSpaceGame {
     public class Transform {
@@ -15,12 +16,12 @@ namespace _3DSpaceGame {
 
             if (json.ContainsKey("position")) {
                 var pos = json["position"] as JArray;
-                res.position = new Vector3(pos[0] as JNumber, pos[1] as JNumber, pos[2] as JNumber);
+                res.position = new vec3(pos[0] as JNumber, pos[1] as JNumber, pos[2] as JNumber);
             }
 
             if (json.ContainsKey("scale")) {
                 var s = json["scale"] as JArray;
-                res.scale = new Vector3(s[0] as JNumber, s[1] as JNumber, s[2] as JNumber);
+                res.scale = new vec3(s[0] as JNumber, s[1] as JNumber, s[2] as JNumber);
             }
 
             if (json.ContainsKey("rotation")) {
@@ -34,63 +35,69 @@ namespace _3DSpaceGame {
 
         // nameing rule violation
 #pragma warning disable IDE1006
-        public Matrix4 matrix => Matrix4.CreateScale(scale) * Matrix4.CreateFromQuaternion(rotation) * Matrix4.CreateTranslation(position);
+        public Matrix4 matrix => Matrix4.CreateScale(scale.ToOpenTKVec()) * Matrix4.CreateFromQuaternion(rotation) * Matrix4.CreateTranslation(position.ToOpenTKVec());
 
-        public Vector3 forward => matrix.Row2.Xyz;
-        public Vector3 back => -forward;
-        public Vector3 right => matrix.Row0.Xyz;
-        public Vector3 left => -right;
-        public Vector3 up => matrix.Row1.Xyz;
-        public Vector3 down => -up;
+        public vec3 forward => matrix.Row2.Xyz.ToNumsVec();
+        public vec3 back => -forward;
+        public vec3 right => matrix.Row0.Xyz.ToNumsVec();
+        public vec3 left => -right;
+        public vec3 up => matrix.Row1.Xyz.ToNumsVec();
+        public vec3 down => -up;
 #pragma warning restore IDE1006
 
-        public Vector3 position = Vector3.Zero;
-        public Vector3 scale = Vector3.One;
+        public vec3 position = vec3.zero;
+        public vec3 scale = vec3.one;
         public Quaternion rotation = Quaternion.Identity;
 
 
         public Transform() { }
-        public Transform(Vector3 pos) => position = pos;
-        public Transform(Vector3 pos, Vector3 scl) {
+        public Transform(vec3 pos) => position = pos;
+        public Transform(vec3 pos, vec3 scl) {
             position = pos; scale = scl;
         }
         public Transform(Quaternion rot) => rotation = rot;
-        public Transform(Vector3 pos, Quaternion rot) {
+        public Transform(vec3 pos, Quaternion rot) {
             position = pos; rotation = rot;
         }
-        public Transform(Vector3 pos, Vector3 scl, Quaternion rot) {
+        public Transform(vec3 pos, vec3 scl, Quaternion rot) {
             position = pos; scale = scl; rotation = rot;
         }
 
-        public void Translate(Vector3 v) {
+        public void Translate(vec3 v) {
             position += v;
+        }
+
+        public void Translate(float x, float y, float z) {
+            position.x += x;
+            position.y += y;
+            position.z += z;
         }
 
         public void Rotate(Quaternion q) {
             rotation *= q;
         }
 
-        public void Rotate(Vector3 axis, float angle) {
-            rotation *= Quaternion.FromAxisAngle(axis, angle);
+        public void Rotate(vec3 axis, float angle) {
+            rotation *= Quaternion.FromAxisAngle(axis.ToOpenTKVec(), angle);
         }
 
-        public void Rotate(Vector3 euler) {
-            rotation *= Quaternion.FromEulerAngles(euler);
+        public void Rotate(vec3 euler) {
+            rotation *= Quaternion.FromEulerAngles(euler.ToOpenTKVec());
         }
 
 
-        public void LookIn(Vector3 dir) => LookIn(dir, Vector3.UnitY);
-        public void LookIn(Vector3 dir, Vector3 up) {
-            var m = Matrix4.LookAt(position, position + dir, up).Inverted();
+        public void LookIn(vec3 dir) => LookIn(dir, vec3.unity);
+        public void LookIn(vec3 dir, vec3 up) {
+            var m = Matrix4.LookAt(position.ToOpenTKVec(), (position + dir).ToOpenTKVec(), up.ToOpenTKVec()).Inverted();
             m.Row0.Xyz = -m.Row0.Xyz;
             m.Row2.Xyz = -m.Row2.Xyz;
             rotation = m.ExtractRotation();
         }
 
-        public void LookAt(Vector3 point) => LookAt(point, Vector3.UnitY);
-        public void LookAt(Vector3 point, Vector3 up) {
+        public void LookAt(vec3 point) => LookAt(point, vec3.unity);
+        public void LookAt(vec3 point, vec3 up) {
 
-            var m = Matrix4.LookAt(position, point, up).Inverted();
+            var m = Matrix4.LookAt(position.ToOpenTKVec(), point.ToOpenTKVec(), up.ToOpenTKVec()).Inverted();
             m.Row0.Xyz = -m.Row0.Xyz;
             m.Row2.Xyz = -m.Row2.Xyz;
             rotation = m.ExtractRotation();
@@ -98,8 +105,8 @@ namespace _3DSpaceGame {
             #region Failed LookAt attempts
             //var z = (point - position).Normalized();
             //var y = up;
-            //var x = Vector3.Cross(y, z).Normalized();
-            //y = Vector3.Cross(x, z).Normalized();
+            //var x = vec3.Cross(y, z).Normalized();
+            //y = vec3.Cross(x, z).Normalized();
             //var rotm = new Matrix3();
             //rotm.Row0.X = x.X;
             //rotm.Row1.X = x.Y;
@@ -124,8 +131,8 @@ namespace _3DSpaceGame {
 
             //var lookdir = forward;
             //var targetdir = (point - position);
-            //var rotaxis = Vector3.Cross(lookdir, targetdir);
-            //var angle = Vector3.CalculateAngle(lookdir, targetdir);
+            //var rotaxis = vec3.Cross(lookdir, targetdir);
+            //var angle = vec3.CalculateAngle(lookdir, targetdir);
             //Rotate(rotaxis, .1f);
 
             /*
@@ -142,9 +149,9 @@ namespace _3DSpaceGame {
 
             //var targetDir = (point - position);
             //var currentDir = forward;
-            //var dot = Vector3.Dot(currentDir, targetDir) ;
+            //var dot = vec3.Dot(currentDir, targetDir) ;
             //var angle = MyMath.Acos(dot);
-            //var axis = Vector3.Cross(currentDir, targetDir);
+            //var axis = vec3.Cross(currentDir, targetDir);
             //Rotate(axis, angle);
 
             //var dir = (point - position).Normalized();
@@ -152,24 +159,24 @@ namespace _3DSpaceGame {
             //Console.WriteLine("dir: " + dir);
             ////var f = (position + forward) - position;
             //var f = forward;
-            //var rotationaxis = Vector3.Cross(dir, f);
+            //var rotationaxis = vec3.Cross(dir, f);
             //Console.WriteLine("axis: " + rotationaxis);
-            //var angle = Vector3.CalculateAngle(dir, f);
+            //var angle = vec3.CalculateAngle(dir, f);
             //Console.WriteLine("angle: " + angle);
             //Rotate(rotationaxis, angle / 10f);
             //rotation.Normalize();
 
             //var f = (point - position).Normalized();
-            //var l = Vector3.Cross(up, f);
-            //var u = Vector3.Cross(l, f);
+            //var l = vec3.Cross(up, f);
+            //var u = vec3.Cross(l, f);
             //var m = new Matrix3(l.X, u.X, f.X,
             //                    l.Y, u.Y, f.Y,
             //                    l.Z, u.Z, f.Z);
             //rotation = m.ExtractRotation();
 
-            //Vector3 f = point - position;
-            //Vector3 u = up;
-            //Vector3 r = Vector3.Cross(f, u);
+            //vec3 f = point - position;
+            //vec3 u = up;
+            //vec3 r = vec3.Cross(f, u);
             //rotation.W = MyMath.Sqrt(1f + r.X + u.Y + f.Z) * .5f;
             //float recip = 1f / (4f * rotation.W);
             //rotation.X = (u.Z - f.Y) * recip;
@@ -177,8 +184,8 @@ namespace _3DSpaceGame {
             //rotation.Z = (r.Y - u.X) * recip;
 
             //if ((targetPosition - m_Position) == glm::vec3(0, 0, 0)) return;
-            //var direction = Vector3.Normalize(point - position);
-            //var r = Vector3.Zero;
+            //var direction = vec3.Normalize(point - position);
+            //var r = vec3.Zero;
             //r.X = MyMath.Asin(-direction.Y);
             //r.Y = -MyMath.Atan2(-direction.X, -direction.Z);
             //Console.WriteLine("angle: " + r);
@@ -186,31 +193,31 @@ namespace _3DSpaceGame {
             #endregion
         }
 
-        public void RotateAround(Vector3 point, Vector3 axis, float angle) => RotateAround(point, Quaternion.FromAxisAngle(axis, angle));
-        public void RotateAround(Vector3 point, Vector3 euler) => RotateAround(point, Quaternion.FromEulerAngles(euler));
-        public void RotateAround(Vector3 point, Quaternion rot) {
+        public void RotateAround(vec3 point, vec3 axis, float angle) => RotateAround(point, Quaternion.FromAxisAngle(axis.ToOpenTKVec(), angle));
+        public void RotateAround(vec3 point, vec3 euler) => RotateAround(point, Quaternion.FromEulerAngles(euler.ToOpenTKVec()));
+        public void RotateAround(vec3 point, Quaternion rot) {
             var v = position - point;
             var r = RotateVector(rot, v);
             position = point + r;
         }
 
-        public static Vector3 RotateVector(Quaternion rot, Vector3 v) {
-            var qv = new Quaternion(v, 0);
+        public static vec3 RotateVector(Quaternion rot, vec3 v) {
+            var qv = new Quaternion(v.ToOpenTKVec(), 0);
             var c = rot;
             c.Conjugate();
-            return (rot * qv * c).Xyz;
+            return (rot * qv * c).Xyz.ToNumsVec();
         }
 
-        public Vector3 DirTo(Vector3 point) => point - position;
-        public Vector3 DirTo(Transform t) => t.position - position;
-        public float DistTo(Vector3 point) => DirTo(point).Length;
-        public float DistTo(Transform t) => DirTo(t).Length;
-        public float DistToSq(Vector3 point) => (point - position).LengthSquared;
-        public float DistToSq(Transform t) => (t.position - position).LengthSquared;
+        public vec3 DirTo(vec3 point) => point - position;
+        public vec3 DirTo(Transform t) => t.position - position;
+        public float DistTo(vec3 point) => DirTo(point).length;
+        public float DistTo(Transform t) => DirTo(t).length;
+        public float DistToSq(vec3 point) => (point - position).sqlength;
+        public float DistToSq(Transform t) => (t.position - position).sqlength;
 
-        public void SetDistTo(Vector3 point, float dist) {
+        public void SetDistTo(vec3 point, float dist) {
             var dir = position - point;
-            position = point + (dir.Normalized() * dist);
+            position = point + (dir.normalized * dist);
         }
 
     }

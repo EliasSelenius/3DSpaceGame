@@ -66,13 +66,16 @@ namespace _3DSpaceGame {
             return res;
         }
 
-        private static (Type, object[]) parseComponent(JObject jobj) {
+        private static (Type, object[]) loadComponent(JObject jobj) {
 
             if (jobj.ContainsKey("args")) {
                 var jargs = jobj["args"] as JArray;
                 var args = new List<object>();
                 foreach (var jarg in jargs) {
                     if (jarg.IsArray) {
+                        var a = jarg as JArray; 
+
+
                         if (toVec2(jarg as JArray, out vec2 v2))
                             args.Add(v2);
                         else if (toVec3(jarg as JArray, out vec3 v3))
@@ -109,10 +112,10 @@ namespace _3DSpaceGame {
         private static object PreProcessingDirective(string str) {
             if (str.StartsWith("mesh(")) {
                 str = str.Substring(5, str.Length - 6);
-                return Assets.OBJs[str].GenMesh();
+                return Meshes.GetMesh(str);
             } else if (str.StartsWith("material(")) {
                 str = str.Substring(9, str.Length - 10);
-                return Material.Chrome;
+                return typeof(Material).GetProperty(str).GetValue(null);
             }
 
             return null;

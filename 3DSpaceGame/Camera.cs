@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,7 @@ namespace _3DSpaceGame {
         public float FOV = 70;
 
         public float NearPlane = .1f;
-        public float FarPlane = 500;
+        public float FarPlane = 2000;
         
         public void SetToMain() {
             MainCamera = this;
@@ -33,10 +34,10 @@ namespace _3DSpaceGame {
             program.SetMat4("cam_projection", p);
 
 
-            var lookat = Matrix4.LookAt(transform.position, transform.position + transform.forward, transform.up);
+            var lookat = Matrix4.LookAt(transform.position.ToOpenTKVec(), (transform.position + transform.forward).ToOpenTKVec(), transform.up.ToOpenTKVec());
             program.SetMat4("cam_view", lookat);
 
-            program.SetVec3("cam_pos", transform.position.X, transform.position.Y, transform.position.Z);
+            program.SetVec3("cam_pos", transform.position.x, transform.position.y, transform.position.z);
 
         }
 

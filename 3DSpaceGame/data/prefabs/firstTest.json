@@ -7,11 +7,11 @@
   },
   "components": [
     {
-      "type": "_3DSpaceGame.PhysicsBody"
+      "type": "_3DSpaceGame.Physics.PhysicsBody"
     },
     {
       "type": "_3DSpaceGame.MeshRenderer",
-      "args": [ "@mesh(TheFrog.obj)", "@material(RedPlastic)" ]
+      "args": [ "@mesh(TheFrog)", "@material(RedPlastic)" ]
     }
   ],
   "children": [
@@ -22,7 +22,7 @@
       "components": [
         {
           "type": "_3DSpaceGame.MeshRenderer",
-          "args": [ "@mesh(TheFrog.obj)", "@material(RedPlastic)" ]
+          "args": [ "@mesh(TheFrog)", "@material(RedPlastic)" ]
         }
       ]
     }

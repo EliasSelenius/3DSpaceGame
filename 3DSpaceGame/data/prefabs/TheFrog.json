@@ -1,16 +1,19 @@
 ﻿{
   "name": "TheFrog",
+  "transform": {
+    "position": [ 0, 10, 50 ]
+  },
   "components": [
     {
-      "type": "_3DSpaceGame.PhysicsBody"
+      "type": "_3DSpaceGame.Physics.PhysicsBody"
     },
     {
       "type": "_3DSpaceGame.MeshRenderer",
-      "args": [ "@mesh(TheFrog.obj)", "@material(Silver)" ]
+      "args": [ "@mesh(TheFrog)", "@material(Silver)" ]
     },
     {
       "type": "_3DSpaceGame.Particles.EngineFlames",
-      "args": [ [0, 0, -2.1], 0.3 ]
+      "args": [ 0, 0, -2.1, 0.3 ]
     }
   ]
 }

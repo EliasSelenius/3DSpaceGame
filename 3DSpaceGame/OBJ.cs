@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using OpenTK;
+using Nums;
 
 namespace _3DSpaceGame {
     public class OBJ {
-        public readonly List<Vector3> Vertices = new List<Vector3>();
-        public readonly List<Vector3> Normals = new List<Vector3>();
-        public readonly List<Vector2> UVs = new List<Vector2>();
+        public readonly List<vec3> Vertices = new List<vec3>();
+        public readonly List<vec3> Normals = new List<vec3>();
+        public readonly List<vec2> UVs = new List<vec2>();
 
         public readonly List<Face> Faces = new List<Face>();
 
@@ -33,23 +33,23 @@ namespace _3DSpaceGame {
             }
         }
 
-        private Vector2 GetUv(int i) {
+        private vec2 GetUv(int i) {
             if (i == 0) {
-                return Vector2.Zero;
+                return vec2.zero;
             }
             return UVs[i - 1];
         }
 
-        private Vector3 GetPos(int i) {
+        private vec3 GetPos(int i) {
             if (i == 0) {
-                return Vector3.Zero;
+                return vec3.zero;
             }
             return Vertices[i - 1];
         }
 
-        private Vector3 GetNormal(int i) {
+        private vec3 GetNormal(int i) {
             if (i == 0) {
-                return Vector3.Zero;
+                return vec3.zero;
             }
             return Normals[i - 1];
         }
@@ -91,7 +91,7 @@ namespace _3DSpaceGame {
                     // vertex position
 
                     if (ParseFloats(p, 3, out float[] o)) {
-                        res.Vertices.Add(new Vector3(o[0], o[1], o[2]));
+                        res.Vertices.Add(new vec3(o[0], o[1], o[2]));
                     } else {
                         //Console.WriteLine("(OBJ parser) problem parsing vertex position, at line " + (i + 1));
                         Log("problem parsing vertex position", i + 1);
@@ -101,7 +101,7 @@ namespace _3DSpaceGame {
                     // vertex UV
 
                     if (ParseFloats(p, 2, out float[] o)) {
-                        res.UVs.Add(new Vector2(o[0], o[1]));
+                        res.UVs.Add(new vec2(o[0], o[1]));
                     } else {
                         //Console.WriteLine("(OBJ parser) problem parsing vertex texture cordinates, at line " + (i + 1));
                         Log("problem parsing vertex texture cordinates", i + 1);
@@ -111,7 +111,7 @@ namespace _3DSpaceGame {
                     // vertex normal
 
                     if (ParseFloats(p, 3, out float[] o)) {
-                        res.Normals.Add(new Vector3(o[0], o[1], o[2]));
+                        res.Normals.Add(new vec3(o[0], o[1], o[2]));
                     } else {
                         //Console.WriteLine("(OBJ parser) problem parsing vertex normal vector, at line " + (i + 1));
                         Log("problem parsing vertex normal vector", i + 1);

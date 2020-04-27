@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using OpenTK;
+using Nums;
 
 namespace _3DSpaceGame {
     public static class Shapes {
@@ -19,10 +19,10 @@ namespace _3DSpaceGame {
             const float X = .525731112119133606f;
             const float Z = .850650808352039932f;
             const float N = 0f;
-            var verts = new List<Vector3> {
-                new Vector3(-X,N,Z), new Vector3(X,N,Z), new Vector3(-X,N,-Z), new Vector3(X,N,-Z),
-                new Vector3(N,Z,X), new Vector3(N,Z,-X), new Vector3(N,-Z,X), new Vector3(N,-Z,-X),
-                new Vector3(Z,X,N), new Vector3(-Z,X, N), new Vector3(Z,-X,N), new Vector3(-Z,-X, N)
+            var verts = new List<vec3> {
+                new vec3(-X,N,Z), new vec3(X,N,Z), new vec3(-X,N,-Z), new vec3(X,N,-Z),
+                new vec3(N,Z,X), new vec3(N,Z,-X), new vec3(N,-Z,X), new vec3(N,-Z,-X),
+                new vec3(Z,X,N), new vec3(-Z,X, N), new vec3(Z,-X,N), new vec3(-Z,-X, N)
             };
 
             var ind = new uint[] {
@@ -43,7 +43,7 @@ namespace _3DSpaceGame {
 
              */
 
-            var m = new Mesh(verts.Select(x => new Vertex(x, Vector2.Zero, Vector3.UnitY)), ind);
+            var m = new Mesh(verts.Select(x => new Vertex(x, vec2.zero, vec3.unity)), ind);
             m.GenNormals();
             return m;
         }

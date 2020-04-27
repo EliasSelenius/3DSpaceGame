@@ -1,0 +1,12 @@
+﻿{
+  "name": "sun",
+  "components": [
+    {
+      "type": "_3DSpaceGame.MeshRenderer",
+      "args": [ "@mesh(sphere)", "@material(Sun)" ]
+    },
+    {
+      "type": "_3DSpaceGame.Particles.SunFlames"
+    }
+  ]
+}

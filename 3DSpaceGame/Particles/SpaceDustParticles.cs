@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Nums;
+
 namespace _3DSpaceGame.Particles {
     public class SpaceDustParticles : ParticleSystem {
 
@@ -13,7 +15,7 @@ namespace _3DSpaceGame.Particles {
 
         private static float outerRadius = 100;
 
-        private OpenTK.Vector3 spawnPos => transform.position + transform.forward * 20f;
+        private vec3 spawnPos => transform.position + transform.forward * 20f;
 
         static SpaceDustParticles() {
             mesh = Meshes.GetMesh("dust_particle");

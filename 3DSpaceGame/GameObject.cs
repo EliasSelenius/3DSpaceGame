@@ -49,9 +49,18 @@ namespace _3DSpaceGame {
         #region Components
 
         private readonly List<Component> components = new List<Component>();
+        private List<Physics.Collider> colliders;
+
+        private void addCollider(Physics.Collider c) {
+            if (colliders == null)
+                colliders = new List<Physics.Collider>();
+            colliders.Add(c);
+        }
 
         public void AddComp(Component c) {
             components.Add(c);
+            if (c is Physics.Collider co)
+                addCollider(co);
             c.Init(this);
         }
 
@@ -65,6 +74,13 @@ namespace _3DSpaceGame {
             (from o in components
              where o is T
              select o as T).FirstOrDefault();
+
+        public Component GetComp(Type type) =>
+            (from o in components
+             where type.IsInstanceOfType(o)
+             select o).FirstOrDefault();
+
+        public Component GetComp(string typename) => GetComp(Type.GetType(typename));
 
         #endregion
 
@@ -102,6 +118,28 @@ namespace _3DSpaceGame {
             }
             scene._RemoveObject(this);
             scene = null;
+        }
+
+        internal void processColliders(int objIndex) {
+
+            if (this.colliders == null) return;
+
+            for (int i = 0; i < colliders.Count; i++) {
+                for (int o = objIndex + 1; o < scene.gameObjects.Count; o++) {
+                    var other = scene.gameObjects[o];
+                    if (other.colliders == null) continue;
+                    for (int j = 0; j < other.colliders.Count; j++) {
+                        colliders[i].checkCollision(other.colliders[j]);
+                        other.colliders[j].checkCollision(colliders[i]);
+                    }
+                }
+            }
+        }
+
+        internal void OnColliderIntersect(Physics.collision collision) {
+            for (int i = 0; i < components.Count; i++) {
+                components[i].OnCollision(collision);
+            }
         }
 
         public void EarlyUpdate() {

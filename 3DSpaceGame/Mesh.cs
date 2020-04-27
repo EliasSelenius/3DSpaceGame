@@ -3,22 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using OpenTK;
-using Glow;
 using System.Runtime.InteropServices;
+
+using Nums;
+using Glow;
+
 
 namespace _3DSpaceGame {
 
     [StructLayout(LayoutKind.Sequential)]
     public struct Vertex {
-        public Vector3 pos;
-        public Vector2 uv;
-        public Vector3 normal;
+        public vec3 pos;
+        public vec2 uv;
+        public vec3 normal;
 
-        public Vertex(Vector3 p, Vector2 u, Vector3 n) {
+        public Vertex(vec3 p, vec2 u, vec3 n) {
             pos = p; uv = u; normal = n;
         }
+
+        public Vertex Lerp(Vertex other, float time) {
+            return new Vertex(pos.lerp(other.pos, time), uv.lerp(other.uv, time), normal.lerp(other.normal, time));
+        }
+
     }
 
     public class Mesh : IRenderable {
@@ -42,6 +48,25 @@ namespace _3DSpaceGame {
             }
         }
 
+        public Triangle[] Triangles {
+            get {
+                var res = new Triangle[TriangleIndices.Count];
+                for (int i = 0; i < TriangleIndices.Count; i++) {
+                    res[i] = new Triangle(vertices[(int)TriangleIndices[i].Item1], vertices[(int)TriangleIndices[i].Item2], vertices[(int)TriangleIndices[i].Item3],
+                        TriangleIndices[i].Item1, TriangleIndices[i].Item2, TriangleIndices[i].Item3);
+                }
+                return res;
+            }
+        }
+
+        public struct Triangle {
+            public readonly Vertex v1, v2, v3;
+            public readonly uint i1, i2, i3;
+            public Triangle(Vertex v1, Vertex v2, Vertex v3, uint i1, uint i2, uint i3) {
+                this.v1 = v1; this.v2 = v2; this.v3 = v3;
+                this.i1 = i1; this.i2 = i2; this.i3 = i3;
+            }
+        }
 
         public Mesh() {
             vertices = new List<Vertex>();
@@ -52,7 +77,7 @@ namespace _3DSpaceGame {
             vertices = verts.ToList();
             indices = indc.ToList();
         }
-        
+
 
         public void Init() {
 
@@ -81,7 +106,8 @@ namespace _3DSpaceGame {
         }
 
         public void Apply() {
-
+            vbo.Initialize(vertices.ToArray(), OpenTK.Graphics.OpenGL4.BufferUsageHint.StaticDraw);
+            ebo.Initialize(indices.ToArray(), OpenTK.Graphics.OpenGL4.BufferUsageHint.StaticDraw);
         }
 
         public void Render() => Render(OpenTK.Graphics.OpenGL4.PrimitiveType.Triangles);
@@ -93,7 +119,13 @@ namespace _3DSpaceGame {
             // TODO: implement
         }
 
-        public void AddVertex(Vector3 p, Vector2 u, Vector3 n) => vertices.Add(new Vertex(p, u, n));
+        public void Mutate(Func<Vertex, Vertex> func) {
+            for (int i = 0; i < vertices.Count; i++) {
+                vertices[i] = func(vertices[i]);
+            }
+        }
+
+        public void AddVertex(vec3 p, vec2 u, vec3 n) => vertices.Add(new Vertex(p, u, n));
 
         public void AddTriangle(uint a, uint b, uint c) {
             indices.Add(a);
@@ -101,15 +133,69 @@ namespace _3DSpaceGame {
             indices.Add(c);
         }
 
+        public void Subdivide(int subdivisions = 1) {
+            for (int i = 0; i < subdivisions; i++)
+                subdivide();
+            //GenNormals();
+        }
 
-        public Vector3 GenNormal(Tuple<uint, uint, uint> face) => GenNormal(face.Item1, face.Item2, face.Item3);
-        public Vector3 GenNormal(uint a, uint b, uint c) => GenNormal((int)a, (int)b, (int)c);
-        public Vector3 GenNormal(int a, int b, int c) => GenNormal(vertices[a], vertices[b], vertices[c]);
+        private void subdivide() {
+            var ts = Triangles;
 
-        public static Vector3 GenNormal(Vertex a, Vertex b, Vertex c) {
+            this.vertices.Clear();
+            this.indices.Clear();
+
+            void _vertex(Vertex v) {
+                var i = vertices.IndexOf(v);
+                if (i == -1) {
+                    vertices.Add(v);
+                    i = vertices.Count - 1;
+                }
+                indices.Add((uint)i);
+            }
+
+            for (int i = 0; i < ts.Length; i++) {
+                var t = ts[i];
+
+                /*
+                  
+                       t.v3
+                        o
+                       / \
+                  vm2 o---o vm3
+                     / \ / \
+                    o---o---o
+                 t.v1  vm1   t.v2
+
+                 */
+
+                Vertex vm1 = t.v1.Lerp(t.v2, .5f),
+                       vm2 = t.v1.Lerp(t.v3, .5f),
+                       vm3 = t.v2.Lerp(t.v3, .5f);
+
+                // triangle 1 (lower left)
+                _vertex(t.v1); _vertex(vm1); _vertex(vm2);
+
+                // triangle 2 (middle)
+                _vertex(vm1); _vertex(vm3); _vertex(vm2);
+
+                // triangle 3 (lower right)
+                _vertex(vm1); _vertex(t.v2); _vertex(vm3);
+
+                // triangle 4 (top)
+                _vertex(vm2); _vertex(vm3); _vertex(t.v3);
+
+            }
+        }
+
+        public vec3 GenNormal(Tuple<uint, uint, uint> face) => GenNormal(face.Item1, face.Item2, face.Item3);
+        public vec3 GenNormal(uint a, uint b, uint c) => GenNormal((int)a, (int)b, (int)c);
+        public vec3 GenNormal(int a, int b, int c) => GenNormal(vertices[a], vertices[b], vertices[c]);
+
+        public static vec3 GenNormal(Vertex a, Vertex b, Vertex c) {
             var dir1 = a.pos - c.pos;
             var dir2 = b.pos - c.pos;
-            return Vector3.Cross(dir1, dir2);
+            return OpenTK.Vector3.Cross(dir1.ToOpenTKVec(), dir2.ToOpenTKVec()).ToNumsVec();
         }
 
         public void FlipIndices() {
@@ -127,7 +213,7 @@ namespace _3DSpaceGame {
                             select (vertices[(int)o.Item1].pos + vertices[(int)o.Item2].pos + vertices[(int)o.Item3].pos) - vertices[i].pos;
 
                 var vert = vertices[i];
-                vert.normal = (vertices[i].pos - MyMath.AvgVec(verts.ToArray())).Normalized();
+                vert.normal = (vertices[i].pos - MyMath.AvgVec(verts.ToArray())).normalized;
                 vertices[i] = vert;
             }
         }

@@ -9,6 +9,10 @@ namespace _3DSpaceGame {
 
         private static readonly Dictionary<string, Mesh> meshes = new Dictionary<string, Mesh>();
 
+        public static void AddMesh(string name, Mesh mesh) {
+            meshes.Add(name, mesh);
+        }
+
         public static Mesh GetMesh(string name) {
             if (meshes.ContainsKey(name)) {
                 return meshes[name];

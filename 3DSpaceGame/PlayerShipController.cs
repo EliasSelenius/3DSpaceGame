@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 
 using OpenTK;
 
+using _3DSpaceGame.Physics;
+
 namespace _3DSpaceGame {
     public class PlayerShipController : Component {
 
         private PhysicsBody p;
+        private Physics.Collider collider;
 
         public override void Start() {
             p = gameObject.GetComp<PhysicsBody>();
+            collider = gameObject.GetComp<Physics.Collider>();
 
             Input.FixedMouse(true);
         }
@@ -31,13 +35,18 @@ namespace _3DSpaceGame {
 
             camrot = camrot.Rotate(new Vector3(Input.MouseDelta.y / 100f, -Input.MouseDelta.x / 100f, 0));
 
-            Camera.MainCamera.transform.position = transform.position + camrot.CalcForward() * -10 * zoom;
-            Camera.MainCamera.transform.LookAt(transform.position, camrot.CalcUp());
-            
+            Camera.MainCamera.transform.position = transform.position + camrot.CalcForward().ToNumsVec() * -10 * zoom;
+            Camera.MainCamera.transform.LookAt(transform.position, camrot.CalcUp().ToNumsVec());
+
             if (!Input.IsKeyDown(OpenTK.Input.Key.AltLeft)) {
                 transform.rotation = Quaternion.Slerp(transform.rotation, camrot, .05f);
             }
 
+
+            /*
+            if (collider.IsIntersecting) {
+                Console.WriteLine("Intersecting!");
+            }*/
 
 
             // Ship movment controlls
@@ -53,6 +62,12 @@ namespace _3DSpaceGame {
             f += transform.left * i.x * .5f;
             p.AddForce(f);
 
+        }
+
+        public override void OnCollision(collision collision) {
+            /*var m = gameObject.GetComp<MeshRenderer>().mesh;
+            m.indices.RemoveRange(0, 10);
+            m.Apply();*/
         }
     }
 }

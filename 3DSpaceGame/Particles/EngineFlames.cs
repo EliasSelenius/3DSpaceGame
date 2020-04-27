@@ -10,33 +10,36 @@ using OpenTK;
 namespace _3DSpaceGame.Particles {
     public class EngineFlames : ParticleSystem {
 
-        public float spawnRate = 200f;
 
         private Vector3 offset;
         private float coneHeadRadius = 0;
 
         private readonly static Mesh mesh;
 
+        private Physics.PhysicsBody pBody;
+
         static EngineFlames() {
             mesh = Meshes.GetMesh("dust_particle");
         }
 
-        public EngineFlames(Vector3 ofs, float radius = 0) : base(20, false) {
+        public EngineFlames(double ofs_x, double ofs_y, double ofs_z, double radius = 0) : this (new Vector3((float)ofs_x, (float)ofs_y, (float)ofs_z), (float)radius) { }
+
+        public EngineFlames(Vector3 ofs, float radius = 0) : base(20, false, 200f) {
             offset = ofs;
             coneHeadRadius = radius;
             material = new Material {
-                emission = new Vector3(.9f, .5f, 0),
-                ambient = new Vector3(.8f, .3f, 0),
-                diffuse = new Vector3(.8f, .3f, 0),
-                specular = new Vector3(1f),
+                emission = new Nums.vec3(.9f, .5f, 0),
+                ambient = new Nums.vec3(.8f, .3f, 0),
+                diffuse = new Nums.vec3(.8f, .3f, 0),
+                specular = Nums.vec3.one,
                 shininess = 1f
             };
         }
 
-        public override void Update() {
-            base.Update();
+        public override void Start() {
+            base.Start();
 
-            this.Queue(spawnRate * Program.DeltaTime);
+            pBody = gameObject.GetComp<Physics.PhysicsBody>();
         }
 
         protected override bool ParticleEndCondition(Particle p) {
@@ -53,7 +56,7 @@ namespace _3DSpaceGame.Particles {
             p.transform.position = transform.position + o + transform.up * f() + transform.left * f();
             p.transform.Rotate(Random.Vec3(0, 5f));
 
-            p.velocity = transform.back;
+            p.velocity = pBody.motion * .8f;
             p.rotationalVelocity = Random.Vec3(3.14f);
         }
 

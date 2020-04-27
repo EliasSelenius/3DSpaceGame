@@ -14,9 +14,9 @@ namespace _3DSpaceGame {
         public const float pi = (float)Math.PI;
         public const float tau = 2 * pi;
 
-        public static Vector3 Sum(params Vector3[] vecs) => vecs.Aggregate((x, y) => x + y);
+        public static vec3 Sum(params vec3[] vecs) => vecs.Aggregate((x, y) => x + y);
 
-        public static Vector3 AvgVec(params Vector3[] vecs) {
+        public static vec3 AvgVec(params vec3[] vecs) {
             return Sum(vecs) / (float)vecs.Length;
         }
 

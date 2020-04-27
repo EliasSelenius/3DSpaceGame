@@ -27,6 +27,7 @@ namespace _3DSpaceGame {
         public static void Load() {
             LoadObjs();
 
+
             LoadShaderSources();
             ProcessShaders();
             CompileShadersFromConfig();
@@ -45,7 +46,10 @@ namespace _3DSpaceGame {
         }
 
         private static void LoadPrefabs() {
-
+            foreach (var item in GetFiles("data/prefabs/*.json")) {
+                var json = JsonParser.Json.FromFile(item.FullName) as JObject;
+                Prefabs.Add(json["name"] as JString, Prefab.Load(json));
+            }
         }
 
         private static void CompileShadersFromConfig() {

@@ -36,8 +36,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Esprima, Version=1.0.1251.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Esprima.1.0.1251\lib\net45\Esprima.dll</HintPath>
+    </Reference>
     <Reference Include="Glow">
       <HintPath>..\..\Glow\Glow\bin\Debug\Glow.dll</HintPath>
+    </Reference>
+    <Reference Include="Jint, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jint.3.0.0-beta-1632\lib\net45\Jint.dll</HintPath>
     </Reference>
     <Reference Include="JsonParser">
       <HintPath>..\..\JsonParser\JsonParser\bin\Debug\JsonParser.dll</HintPath>
@@ -84,9 +90,13 @@
     <Compile Include="Assets.cs" />
     <Compile Include="GameWorld\Sector.cs" />
     <Compile Include="GameWorld\SolarSystem.cs" />
+    <Compile Include="IcoSphereSubdivisonTestComp.cs" />
+    <Compile Include="JsConsole.cs" />
     <Compile Include="Meshes.cs" />
     <Compile Include="Particles\EngineFlames.cs" />
+    <Compile Include="Particles\SunFlames.cs" />
     <Compile Include="Physics\Collider.cs" />
+    <Compile Include="Physics\Ray.cs" />
     <Compile Include="Skybox.cs" />
     <Compile Include="Graphics.cs" />
     <Compile Include="Shapes.cs" />
@@ -104,7 +114,7 @@
     <Compile Include="MyMath.cs" />
     <Compile Include="OBJ.cs" />
     <Compile Include="ParticleSystem.cs" />
-    <Compile Include="PhysicsBody.cs" />
+    <Compile Include="Physics\PhysicsBody.cs" />
     <Compile Include="PlayerShipController.cs" />
     <Compile Include="Prefab.cs" />
     <Compile Include="Program.cs" />
@@ -130,12 +140,13 @@
     <None Include="data\models\**\*.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="data\scripts\**\*.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="data\prefabs\**\*.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="data\prefabs\TheFrog.json" />
-    <None Include="data\shaders\screenquad_frag.glsl" />
-    <None Include="data\shaders\screenquad_vert.glsl" />
+    <None Include="data\prefabs\sun.json" />
     <None Include="data\shaders\ShadersConfig.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -146,11 +157,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="data\scripts\console.js" />
     <Content Include="TODO.txt" />
     <Content Include="data\textures\**\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -158,4 +171,8 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.Toolset.3.1.0\build\Microsoft.Net.Compilers.Toolset.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.Toolset.3.1.0\build\Microsoft.Net.Compilers.Toolset.props'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

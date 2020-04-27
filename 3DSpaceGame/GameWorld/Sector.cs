@@ -8,10 +8,10 @@ namespace _3DSpaceGame.GameWorld {
     public class Sector {
 
         private Scene scene;
+        private SolarSystem solarSystem;
 
-
-        public Sector() {
-
+        public Sector(SolarSystem ss) {
+            solarSystem = ss;
         }
 
         public void SetToActiveScene() {

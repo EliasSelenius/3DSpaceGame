@@ -15,7 +15,7 @@ namespace _3DSpaceGame {
 #pragma warning restore IDE1006
 
 
-        public void Init(GameObject g) {
+        internal void Init(GameObject g) {
             gameObject = g;
             if (gameObject.HasStarted) {
                 Start();
@@ -33,6 +33,7 @@ namespace _3DSpaceGame {
         public virtual void Update() { }
         // the render loop
         public virtual void Render() { }
-
+        // collision
+        public virtual void OnCollision(Physics.collision collision) { }
     }
 }

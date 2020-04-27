@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using OpenTK;
+using Nums;
 
 namespace _3DSpaceGame {
     class CamFlyController : Component {
@@ -20,7 +20,7 @@ namespace _3DSpaceGame {
                 speed = 1.6f;
             }
 
-            var translation = new Vector3();
+            var translation = vec3.zero;
             var wasd = Input.Wasd;
             translation += transform.forward * wasd.y;
             translation += transform.left * wasd.x;
@@ -30,7 +30,7 @@ namespace _3DSpaceGame {
             //transform.Rotate(transform.up, Input.MouseDelta.X / 100);
             //transform.Rotate(transform.right, Input.MouseDelta.Y / 100);
             //transform.Rotate(transform.forward, Input.KeyAxis(OpenTK.Input.Key.E, OpenTK.Input.Key.Q) / 15);
-            transform.Rotate(new Vector3(Input.MouseDelta.y / 100f, -Input.MouseDelta.x / 100f, -Input.KeyAxis(OpenTK.Input.Key.Q, OpenTK.Input.Key.E) / 10f));
+            transform.Rotate(new vec3(Input.MouseDelta.y / 100f, -Input.MouseDelta.x / 100f, -Input.KeyAxis(OpenTK.Input.Key.Q, OpenTK.Input.Key.E) / 10f));
 
 
         }

@@ -5,24 +5,25 @@ using System.Text;
 using System.Threading.Tasks;
 
 using OpenTK;
+using Nums;
 
 namespace _3DSpaceGame {
 
     public class Particle {
         public readonly Transform transform = new Transform();
         public float time = 0;
-        public Vector3 velocity;
-        public Vector3 rotationalVelocity;
+        public vec3 velocity;
+        public vec3 rotationalVelocity;
         public bool enabled = false;
 
         
         public void Reset() {
             time = 0;
             enabled = false;
-            transform.position = Vector3.Zero;
+            transform.position = vec3.zero;
             transform.rotation = Quaternion.Identity;
-            transform.scale = Vector3.One;
-            velocity = Vector3.Zero;
+            transform.scale = vec3.one;
+            velocity = vec3.zero;
         }
         
     }
@@ -38,6 +39,8 @@ namespace _3DSpaceGame {
         protected IEnumerable<Particle> DisabledParticles => from o in particles
                                                            where o.enabled == false
                                                            select o;
+
+        public float spawnRate = 0;
 
         protected bool LocalCoords;
 
@@ -60,9 +63,10 @@ namespace _3DSpaceGame {
             }
         }
         
-        public ParticleSystem(int pcount, bool local = true) {
+        public ParticleSystem(int pcount, bool local = true, float spr = 0) {
             ParticleCount = pcount;
             LocalCoords = local;
+            spawnRate = spr;
         }
 
         public override void EarlyUpdate() {
@@ -100,6 +104,10 @@ namespace _3DSpaceGame {
                 p.enabled = true;
                 StartParticle(p);
             }
+        }
+
+        public override void Update() {
+            Queue(spawnRate * Program.DeltaTime);
         }
 
         public override void Render() {
